@@ -1,0 +1,32 @@
+\documentclass[a4paper]{report}
+
+% Set lang (support for xelatex and lualatex)
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\setdefaultlanguage{spanish}
+
+% Enhanced font: Computer Modern Unicode
+\setmainfont{CMU Serif}
+\setsansfont{CMU Sans Serif}
+\setmonofont{CMU Typewriter Text}
+
+% Math environments and fonts
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{cancel}
+\usepackage{esint}
+
+% pgfplots and tikz for graphs
+\usepackage{tikz}
+\usepackage{circuitikz}
+\usepackage{pgfplots}
+\usetikzlibrary{calc, positioning}
+\usetikzlibrary{3d, arrows.meta, decorations.markings, backgrounds, fadings}
+% this line is recomended by the pgfplots lastes stable version
+% see https://pgfplots.sourceforge.net/pgfplots.pdf
+\pgfplotsset{compat=1.18}
+
+\begin{document}
+  \include{chpt1}
+\end{document}
