@@ -1,0 +1,109 @@
+\chapter{Transistores}
+
+\section{Introducción al Transistor Bipolar}
+
+Un transistor de unión bipolar (BJT) es un dispositivo semiconductor impulsado por corriente, en el que una pequeña cantidad de corriente en el conductor base controla una mayor cantidad de corriente entre el colector y el emisor. Se pueden utilizar para amplificar una señal débil, como un oscilador o un interruptor.
+
+Un transistor tiene tres regiones dopadas, como se muestra en la figura \ref{fig_ilustracion_bjt}. La región de de la derecha es el emisor, la región intermedia la base y la región de la izquierda es el colector. En un transistor real, la región de la base es mucho más estrecha comparada con las regiones del colector y de emisor. El transistor puede ser un dispositivo NPN porque tiene una región P entre dos regiones N, o PNP que tiene una región N entre dos regiones P, según los portadores mayoritarios por región.
+
+\begin{figure}[!ht]
+  \centering
+  \input{chapters/01 capitulo/media/}
+\end{figure}
+
+Se puede observar que el transistor
+
+\subsection{Nomenclatura y Variables de Circuito}
+\begin{figure}[!ht]
+  \centering
+  \begin{subfigure}[b]{0.4\textwidth}
+    \centering
+    \begin{circuitikz}
+      \draw (0,0) node[npn](Q){};
+      \node[font=\tiny,left] at (Q.B) {Base};
+      \node[font=\tiny,above] at (Q.C) {Colector};
+      \node[font=\tiny,below] at (Q.E) {Emisor};
+    \end{circuitikz}
+    \caption{Transistor NPN.}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.4\textwidth}
+    \centering
+    \begin{circuitikz}
+      \draw (0,0) node[pnp](Q){};
+      \node[font=\tiny,left] at (Q.B) {Base};
+      \node[font=\tiny,below] at (Q.C) {Colector};
+      \node[font=\tiny,above] at (Q.E) {Emisor};
+    \end{circuitikz}
+    \caption{Transistor PNP.}
+  \end{subfigure}
+  \caption{Tipos de transistores.}
+\end{figure}
+
+\begin{itemize}
+  \item $V_{cc}$: Tensión de alimentación de corriente continua del circuito.
+  \item $I_b, I_c, I_e$: Corrientes de base, colector y emisor, respectivamente. La corriente de base actúa como la señal de control, mientras que la del colector es la corriente controlada.
+  \item $V_{ce}$: Tensión colector-emisor. Es la caída de potencial interna del transistor entre sus terminales de salida. Su valor es fundamental para determinar la región de operación del dispositivo (corte, activa o saturación).
+  \item $V_{be}$: Tensión base-emisor. Cuando la unión base-emisor está polarizada en directa (región activa), se asume típicamente como una constante térmica de $0.7\text{V}$ para transistores de silicio.
+  \item $\beta$: (también denotado como $h_{FE}$): Ganancia estática de corriente en configuración emisor común. Representa el factor de amplificación entre la corriente de colector y la pequeñísima corriente de base ($I_c = \beta I_b$).
+\end{itemize}
+
+\subsection{Resistencias del Circuito de Polarización}
+Es crucial mantener la consistencia en la nomenclatura de las resistencias externas para no confundir la red de polarización con el modelo de pequeña señal:
+\begin{itemize}
+  \item $R_c$: Resistencia de colector. Limita la corriente máxima que atraviesa la rama principal de salida. 
+  \item $R_e$: Resistencia de emisor. Su función principal es proporcionar estabilidad térmica al punto de operación mediante realimentación negativa.
+\end{itemize}
+
+\subsection{Ecuaciones Fundamentales y Malla de Salida}
+
+Por la Ley de Corrientes de Kirchhoff aplicada al transistor, la corriente que sale por el emisor es exactamente la suma de las corrientes que entran:
+\begin{equation}
+  I_e = I_c + I_b
+\end{equation}
+
+Dado que el transistor opera según la relación lineal $I_c = \beta I_b$, es posible reescribir la corriente de emisor en función exclusiva de $I_c$:
+\begin{equation}
+  I_e = I_c + \frac{I_c}{\beta} = I_c \left( \frac{\beta + 1}{\beta} \right)
+\end{equation}
+
+En componentes reales, $\beta$ suele tomar valores altos (típicamente entre $100$ y $300$). Esto implica que el factor $\frac{\beta + 1}{\beta} \approx 1$. Por lo tanto, a efectos prácticos de diseño, es seguro realizar la siguiente aproximación:
+\begin{equation}
+    I_e \approx I_c
+\end{equation}
+
+Para encontrar el punto de operación, se aplica la Ley de Tensiones de Kirchhoff (LVK) en la malla de salida, analizando el recorrido de la corriente desde la fuente $V_{cc}$ hasta tierra. La suma de las caídas de potencial en $R_c$, el transistor ($V_{ce}$) y $R_e$ debe ser igual a la tensión total suministrada:
+\begin{equation}
+  V_{cc} = R_c I_c + V_{ce} + R_e I_e
+\end{equation}
+
+Sustituyendo $I_e$ por su expresión analítica exacta sin aproximar, se obtiene la ecuación característica de la malla de salida:
+\begin{equation}
+  V_{cc} - V_{ce} = I_c \left( R_c + R_e \frac{\beta +1}{\beta} \right)
+\end{equation}
+
+\section{Polarización del transistor bipolar}
+
+A continuación se analizará el circuito de la figura \ref{fig_esquematico_1}.
+\begin{figure}[!ht]
+  \centering
+  \begin{circuitikz}[scale=0.7]
+    \draw (0,4.5) to [short,*-] (-0,5.5) to[sV_<=$V_{cc}$] (-1.5,5.5) -- (-2,5.5) node[ground]{};
+    \draw (2,0) node[npn](Q){};
+    \draw (Q.B) to[short,-*,i<=$I_b$] (-2,0) to[R=$R_2$] (-2,4.5) -- (2,4.5) to[R=$R_c$,i=$I_c$] (Q.C);
+    \draw (-2,0) to[R=$R_1$] (-2,-4.5) to[short] (2,-4.5) to[R=$R_e$,i<=$I_e$] (Q.E);
+    \draw (0,-4.5) -- (0,-5) node[ground]{};
+  \end{circuitikz}
+  \caption{}
+  \label{fig_esquematico_1}
+\end{figure}
+
+Desde el punto de vista del circuito del Colector del transistor es
+\begin{align*}
+  V_{cc} &= R_c I_c + V_{ce} + R_e I_e \\ 
+  V_{cc} - V_{ce} &= \left( R_c + R_e \frac{\beta +1}{\beta} \right) \\
+  I_c &= \frac{V_{cc} - V_{ce}}{R_c+R_e\frac{\beta+1}{\beta}}
+\end{align*}
+Luego, aproximadamente queda:
+\[
+  I_c = \frac{V_{cc} - V_{ce}}{R_c+R_e}
+\]
