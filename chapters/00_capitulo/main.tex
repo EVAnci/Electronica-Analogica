@@ -1,0 +1,51 @@
+\chapter{Introducción}
+
+\section{Equivalente de Thevenin}
+
+Un circuito, tal vez desconocido, como el que se muestra en la figura \ref{sfig_caja_negra_fuente} puede representarse con un circuito equivalente de Thevenin. La caja negra puede contener cualquier circuito formado por fuentes de continua y resistencias lineales. Una resistencia lineal no varía cuando aumenta la tensión. El circuito equivalente de Thevenin permite, independientemente de lo complejo que sea el circuito en el interior de la caja negra, reemplazarlo por su equivalente de Thevenin formado por una fuente de Thevenin (\(V_\text{th}\)) y una resistencia de Thevenin (\(R_\text{th}\)), como muestra la figura \ref{sfig_eq_thevenin}.
+
+\begin{figure}[!ht]
+  \centering
+  \begin{subfigure}[b]{0.45\textwidth}
+    \centering
+    \begin{circuitikz} 
+      \draw[dashed, fill=gray!10] (0,-0.5) rectangle (3,2.5);
+      \node at (1.5,1) {\textbf{Caja Negra}};
+      
+      \draw (3,2) to[short, -*] (4,2) node[above](A) {A};
+      \draw (3,0) to[short, -*] (4,0) node[below](B) {B};
+
+      \draw[gray] (A) to[R=$R_L$] (B);
+    \end{circuitikz}
+    \caption{Circuito de una fuente de tensión.}
+    \label{sfig_caja_negra_fuente}
+  \end{subfigure}
+  \hspace{5mm}
+  \begin{subfigure}[b]{0.45\textwidth}
+    \centering
+    \begin{circuitikz}
+      \draw[dashed, fill=gray!10] (-1.3,-0.5) rectangle (1.7,2.5);
+      \draw (0,0) to[battery,l=$V_\text{th}$, invert] (0,2)
+            to[R,l_=$R_\text{th}$] (2,2) to[short, -*] (2.5,2) node[above](A) {A};
+      \draw (0,0) to[short, -*] (2.5,0) node[below](B) {B};
+      \draw[gray] (A) to[R=$R_L$] (B);
+    \end{circuitikz}
+    \caption{Equivalente de Thevenin del circuito \ref{sfig_caja_negra_fuente}.}
+    \label{sfig_eq_thevenin}
+  \end{subfigure}
+  \caption{Equivalente de Thevenin de un circuito}
+  \label{fig_eq_thevenin}
+\end{figure}
+
+Para obtener el equivalente de Thevenin de un circuito conocido, se debe encontrar la tensión de la fuente de Thevenin y la resistencia de Thevenin.
+
+La tensión de la fuente de Thevenin se define como la tensión que aparece entre los terminales de carga (A y B) cuando la resistencia de carga está en circuito abierto.
+\[
+  \text{Tensión de Thevenin: } V_\text{th}=V_\text{OC} \quad \text{(OC: circuito abierto)}
+\]
+
+La resistencia de Thevenin se define como la resistencia que mide un óhmetro en los terminales A y B cuando todas las fuentes se anulan y la resistencia de carga \(R_L\) está en circuito abierto.
+\[
+  \text{Resistencia de Thevenin: } R_\text{th}=R_\text{OC}
+\]
+Para anular una fuente de tensión, se reemplaza por un corto circuito. Para anular una fuente de corriente se reemplaza por un circuito abierto.

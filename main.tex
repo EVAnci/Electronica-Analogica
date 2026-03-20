@@ -29,6 +29,14 @@
 
 \usepackage{subcaption}
 
+\usepackage{siunitx}
+\sisetup{
+  locale = FR,
+  separate-uncertainty = true, 
+  per-mode = symbol
+}
+
 \begin{document}
-  \include{chapters/01 capitulo/chpt1}
+  \include{chapters/00_capitulo/main}
+  \include{chapters/01_capitulo/main}
 \end{document}
