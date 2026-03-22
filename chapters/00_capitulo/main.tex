@@ -2,7 +2,7 @@
 
 \section{Equivalente de Thevenin}
 
-Un circuito, tal vez desconocido, como el que se muestra en la figura \ref{sfig_caja_negra_fuente} puede representarse con un circuito equivalente de Thevenin. La caja negra puede contener cualquier circuito formado por fuentes de continua y resistencias lineales. Una resistencia lineal no varía cuando aumenta la tensión. El circuito equivalente de Thevenin permite, independientemente de lo complejo que sea el circuito en el interior de la caja negra, reemplazarlo por su equivalente de Thevenin formado por una fuente de Thevenin (\(V_\text{th}\)) y una resistencia de Thevenin (\(R_\text{th}\)), como muestra la figura \ref{sfig_eq_thevenin}.
+Un circuito, tal vez desconocido, como el que se muestra en la figura \ref{sfig_caja_negra_fuente} puede representarse con un circuito equivalente de Thevenin. Usualmente se denomina al circuito desconocido como ``caja negra''. La caja negra puede contener cualquier circuito formado por fuentes de continua y resistencias lineales. Una resistencia lineal no varía cuando aumenta la tensión. El circuito equivalente de Thevenin permite, independientemente de lo complejo que sea el circuito en el interior de la caja negra, reemplazarlo por su equivalente de Thevenin formado por una fuente de Thevenin (\(V_\text{th}\)) y una resistencia de Thevenin (\(R_\text{th}\)), como muestra la figura \ref{sfig_eq_thevenin}.
 
 \begin{figure}[!ht]
   \centering
@@ -17,7 +17,7 @@ Un circuito, tal vez desconocido, como el que se muestra en la figura \ref{sfig_
 
       \draw[gray] (A) to[R=$R_L$] (B);
     \end{circuitikz}
-    \caption{Circuito de una fuente de tensión.}
+    \caption{Circuito de una fuente de tensión desconocida.}
     \label{sfig_caja_negra_fuente}
   \end{subfigure}
   \hspace{5mm}
@@ -39,7 +39,7 @@ Un circuito, tal vez desconocido, como el que se muestra en la figura \ref{sfig_
 
 Para obtener el equivalente de Thevenin de un circuito conocido, se debe encontrar la tensión de la fuente de Thevenin y la resistencia de Thevenin.
 
-La tensión de la fuente de Thevenin se define como la tensión que aparece entre los terminales de carga (A y B) cuando la resistencia de carga está en circuito abierto.
+La tensión de la fuente de Thevenin se define como la tensión que aparece entre los terminales de carga (A y B) cuando la resistencia de carga está en circuito abierto (\(R_L\to\infty\)).
 \[
   \text{Tensión de Thevenin: } V_\text{th}=V_\text{OC} \quad \text{(OC: circuito abierto)}
 \]
@@ -49,3 +49,20 @@ La resistencia de Thevenin se define como la resistencia que mide un óhmetro en
   \text{Resistencia de Thevenin: } R_\text{th}=R_\text{OC}
 \]
 Para anular una fuente de tensión, se reemplaza por un corto circuito. Para anular una fuente de corriente se reemplaza por un circuito abierto.
+
+\begin{example}
+  Encuentre el equivalente de Thevenin del circuito de la figura 
+  \begin{figure}[!ht]
+    \centering
+    \begin{circuitikz}[scale=0.7]
+      \coordinate[label=right:A] (A) at (6,3);
+      \coordinate[label=right:B] (B) at (6,0);
+      
+      \draw (A) to[R,l_=\qty{4}{\kilo\ohm},*-] (3,3) to[R,l_=\qty{6}{\kilo\ohm}] (0,3)
+        to[battery,l_=\qty{72}{\volt}] (0,0) to[short,-*] (B);
+      \draw (3,3) to[R=\qty{3}{\kilo\ohm},*-*] (3,0);
+
+      \draw[gray] (A) to[R=$R_L$] (B);
+    \end{circuitikz}
+  \end{figure}
+\end{example}
