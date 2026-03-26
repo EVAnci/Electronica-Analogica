@@ -1,0 +1,92 @@
+\chapter{Filtros activos}
+
+Un circuito activo es aquel que tiene componentes activos. Un componente se denomina activo si es capaz de controlar el flujo de electricidad, usualmente mediante otra señal eléctrica, o si puede introducir ganancia de potencia en el circuito. Ejemplos de componentes activos son los transistores, o los amplificadores operacionales.
+
+En consecuencia, un circuito RLC es un circuito pasivo, ya que la potencia que ingresa a los componentes es la misma potencia que se disipa y se obtiene a la salida del circuito, es decir, no se genera potencia. Antes de continuar con los filtros activos, es conveniente revisar los conceptos de filtros pasivos y sus ecuaciones, ya que para filtros activos se aplicaran las mismas ecuaciones y análisis pero con amplificadores operacionales.
+
+\section{Circuitos RLC y Filtros Pasivos}
+
+Los circuitos que combinan resistores (R), inductores (L) y capacitores (C) son fundamentales para el procesamiento de señales analógicas. Su comportamiento depende de la frecuencia de la señal de entrada, lo que permite utilizarlos para seleccionar o rechazar rangos de frecuencia específicos.
+
+\subsection{El Circuito RLC Serie y la Resonancia}
+
+En un circuito RLC serie, la impedancia total viene dada por:
+\begin{equation}
+  Z = R + j\left(\omega L - \frac{1}{\omega C}\right)
+\end{equation}
+
+La frecuencia de resonancia ($\omega_0$) ocurre cuando la reactancia inductiva cancela a la reactancia capacitiva, haciendo que la impedancia sea puramente resistiva y alcance su valor mínimo ($Z = R$).
+\begin{equation}
+  \omega_0 = \frac{1}{\sqrt{LC}} \quad \text{[rad/s]} \implies f_0 = \frac{1}{2\pi\sqrt{LC}} \quad \text{[Hz]}
+\end{equation}
+
+\begin{figure}[h!]
+  \centering
+  \begin{circuitikz}[american voltages]
+    \draw (0,0) to[sV, l=$v_i(t)$] (0,3)
+          to[R, l=$R$, i=$i(t)$] (2,3)
+          to[L, l=$L$] (4,3)
+          to[C, l=$C$] (6,3) -- (6,0) -- (0,0);
+  \end{circuitikz}
+  \caption{Circuito RLC en serie.}
+\end{figure}
+
+El Factor de Calidad ($Q$) determina la ``agudeza'' de la resonancia. Para un circuito serie:
+\begin{equation}
+  Q = \frac{1}{R} \sqrt{\frac{L}{C}} = \frac{\omega_0 L}{R}
+\end{equation}
+
+\subsection{Filtros Analógicos Básicos}
+
+Los filtros pasivos utilizan componentes RLC para modificar la amplitud y fase de una señal en función de su frecuencia. La relación entre la salida y la entrada se define mediante la función de transferencia $H(j\omega) = \frac{V_\text{out}}{V_\text{in}}$.
+
+\subsubsection{Filtro Pasa-Bajos (Low-Pass Filter)}
+
+Permite el paso de frecuencias bajas y atenúa las frecuencias superiores a la frecuencia de corte ($\omega_c$). En un filtro RC estándar, la salida se toma en el capacitor.
+\begin{equation}
+  H(j\omega) = \frac{1}{1 + j\omega RC} \quad ; \quad \omega_c = \frac{1}{RC}
+\end{equation}
+
+\begin{figure}[h!]
+  \centering
+  \begin{circuitikz}
+    \draw (0,0) to[V, l=$V_{in}$] (0,2) 
+          to[R, l=$R$] (3,2) 
+          to[short, -o] (4,2) node[anchor=south]{$V_{out}^+$};
+    \draw (3,2) to[C, l=$C$] (3,0);
+    \draw (0,0) -- (3,0) to[short, -o] (4,0) node[anchor=north]{$V_{out}^-$};
+  \end{circuitikz}
+  \caption{Filtro Pasa-Bajos RC de primer orden.}
+\end{figure}
+
+\subsubsection{Filtro Pasa-Altos (High-Pass Filter)}
+
+Atenúa las frecuencias por debajo de $\omega_c$ y permite el paso de las altas. Intercambiando la resistencia y el capacitor del circuito anterior, tomamos la salida en la resistencia.
+\begin{equation}
+  H(j\omega) = \frac{j\omega RC}{1 + j\omega RC}
+\end{equation}
+
+\subsubsection{Filtro Pasa-Banda (Band-Pass Filter)}
+Permite el paso de un rango específico de frecuencias (Ancho de Banda, $BW$) centrado en $\omega_0$. Se puede implementar tomando la tensión sobre la resistencia en un circuito RLC serie.
+\begin{equation}
+  BW = \frac{\omega_0}{Q} = \frac{R}{L} \quad \text{[rad/s]}
+\end{equation}
+
+\subsubsection{Filtro Rechaza-Banda (Band-Stop / Notch Filter)}
+Atenúa fuertemente las señales que se encuentran en una banda de frecuencias específica, dejando pasar las demás. En un RLC serie, esto se logra tomando la tensión de salida sobre el conjunto LC.
+\begin{equation}
+  H(j\omega) = \frac{1 - \omega^2 LC}{1 - \omega^2 LC + j\omega RC}
+\end{equation}
+
+\subsection*{Preguntas}
+
+\begin{enumerate}
+  \item ¿Cuáles son las diferencias entre un circuito activo y uno pasivo?
+  \item ¿Qué es un filtro?
+  \item ¿Qué es la función de transferencia? ¿Para qué sirve
+  \item ¿Qué tipos de filtros hay?
+  \item ¿Por qué se usan capacitores e inductores para realizar filtros?
+  \item ¿Qué es la frecuencia de resonancia?
+\end{enumerate}
+
+\section{Circuitos activos básicos}
