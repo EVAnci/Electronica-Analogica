@@ -83,10 +83,169 @@ Atenúa fuertemente las señales que se encuentran en una banda de frecuencias e
 \begin{enumerate}
   \item ¿Cuáles son las diferencias entre un circuito activo y uno pasivo?
   \item ¿Qué es un filtro?
-  \item ¿Qué es la función de transferencia? ¿Para qué sirve
+  \item ¿Qué es la función de transferencia? ¿Para qué sirve?
   \item ¿Qué tipos de filtros hay?
   \item ¿Por qué se usan capacitores e inductores para realizar filtros?
   \item ¿Qué es la frecuencia de resonancia?
 \end{enumerate}
 
+\subsubsection*{Respuestas}
+
+\begin{enumerate}
+  \item Un filtro pasivo tiene la característica de disipar la misma cantidad de potencia que le es entregada por su fuente. En un circuito activo algunos componentes reciben una alimentación adicional, entregando más potencia al circuito.
+  \item Un filtro es un circuito que modifica la fase y la amplitud de la corriente del circuito.
+  \item La función de transferencia se define como \(H(j\omega)=\frac{V_\text{out}}{V_\text{in}}\) y sirve para determinar como se modifica la señal de salida respecto a la de entrada en función de la frecuencia. De esa manera se puede determinar ante qué tipo de filtro se está.
+  \item Se usan capacitores e inductores debido a sus características en función de la frecuencia. Actúan como impedancias que varían con el valor de la frecuencia. Esto permite tener valores altos de impedancia o el mismo valor de \(R\) si se opera sobre la frecuencia de resonancia.
+  \item La frecuencia de resonancia es la frecuencia \(\omega_0\) a la cual la impedancia capacitiva e inductiva se cancelan.
+\end{enumerate}
+
+\subsection{Ejemplos Prácticos: Deducción de la Función de Transferencia}
+
+\subsubsection{Ejemplo 1: Filtro Pasa-Altos RC (Primer Orden)}
+
+En este circuito, la señal de salida se toma en paralelo a la resistencia, lo que nos permite bloquear las bajas frecuencias y dejar pasar las altas.
+
+\begin{figure}[!ht]
+  \centering
+  \begin{circuitikz}[american voltages]
+    \draw (0,0) to[V, l=$V_{in}$] (0,2)
+          to[C, l=$C$] (3,2)
+          to[short, -o] (4,2) node[anchor=south]{$V_{out}^+$};
+    \draw (3,2) to[R, l=$R$] (3,0);
+    \draw (0,0) -- (3,0) to[short, -o] (4,0) node[anchor=north]{$V_{out}^-$};
+  \end{circuitikz}
+  \caption{Esquema de un Filtro Pasa-Altos RC.}
+\end{figure}
+
+Aplicamos la regla del divisor de tensión. Sabiendo que la impedancia del capacitor es $Z_C = \frac{1}{j\omega C}$ y la de la resistencia es $Z_R = R$:
+\begin{equation}
+  V_{out} = V_{in} \frac{R}{R + \frac{1}{j\omega C}}
+\end{equation}
+
+Despejando la relación $H(j\omega) = \frac{V_{out}}{V_{in}}$ y multiplicando numerador y denominador por $j\omega C$ para eliminar la fracción anidada, obtenemos la forma canónica:
+\begin{equation}
+  H(j\omega) = \frac{R \cdot j\omega C}{\left(R + \frac{1}{j\omega C}\right) j\omega C} = \frac{j\omega RC}{1 + j\omega RC}
+\end{equation}
+
+\textbf{Análisis de límites:}
+\begin{itemize}
+  \item Si $\omega \to 0$, $H(j\omega) \to 0$ (Bloquea bajas frecuencias).
+  \item Si $\omega \to \infty$, $H(j\omega) \to 1$ (Permite el paso de altas frecuencias).
+\end{itemize}
+
+\subsubsection{Ejemplo 2: Filtro Pasa-Bajos RLC (Segundo Orden)}
+
+En este sistema de segundo orden, la tensión de salida se toma en paralelo al capacitor. 
+
+\begin{figure}[!ht]
+  \centering
+  \begin{circuitikz}[american voltages]
+    \draw (0,0) to[V, l=$V_{in}$] (0,2)
+          to[L, l=$L$] (2,2)
+          to[R, l=$R$] (4,2)
+          to[short, -o] (5,2) node[anchor=south]{$V_{out}^+$};
+    \draw (4,2) to[C, l=$C$] (4,0);
+    \draw (0,0) -- (4,0) to[short, -o] (5,0) node[anchor=north]{$V_{out}^-$};
+  \end{circuitikz}
+  \caption{Esquema de un Filtro Pasa-Bajos RLC serie.}
+\end{figure}
+
+Partimos de que la corriente $i$ es la misma para todos los componentes en serie. La impedancia total es $Z = R + j\omega L + \frac{1}{j\omega C}$.
+\begin{equation}
+  i = \frac{V_{in}}{Z} \quad \text{y} \quad V_{out} = i \cdot \frac{1}{j\omega C}
+\end{equation}
+
+Sustituyendo la corriente en la ecuación de $V_{out}$ y despejando $H(j\omega)$:
+\begin{equation}
+  H(j\omega) = \frac{V_{out}}{V_{in}} = \frac{\frac{1}{j\omega C}}{R + j\omega L + \frac{1}{j\omega C}}
+\end{equation}
+
+Para simplificar, multiplicamos el numerador y el denominador por $j\omega C$. Recordando que $j^2 = -1$:
+\begin{equation}
+  H(j\omega) = \frac{1}{j\omega R C + j^2\omega^2 LC + 1} = \frac{1}{1 - \omega^2 LC + j\omega RC}
+\end{equation}
+
+\textbf{Análisis de límites y selectividad:}
+\begin{itemize}
+  \item Si $\omega \to 0$, $H(j\omega) \to 1$ (Permite el paso de bajas frecuencias y DC).
+  \item Si $\omega \to \infty$, $H(j\omega) \to 0$ (Bloquea altas frecuencias).
+\end{itemize}
+Al ser un filtro de segundo orden (presencia del término $\omega^2$), la amplitud decae más rápido respecto a la frecuencia ($-40\text{ dB/década}$), haciéndolo mucho más selectivo que el filtro RC de primer orden.
+
 \section{Circuitos activos básicos}
+
+\section{Filtros Activos de Primer Orden}
+
+A diferencia de los filtros pasivos, los filtros activos incorporan elementos amplificadores como el Amplificador Operacional (Am-Op). Esto permite aislar etapas mediante adaptación de impedancias y proporcionar una ganancia de potencia mayor a la unidad.
+
+\subsection{Filtro Pasa-Bajos Inversor}
+
+Esta topología se basa en la configuración clásica del amplificador inversor, pero reemplazando la resistencia de realimentación por una impedancia compleja formada por una resistencia ($R_2$) en paralelo con un capacitor ($C$).
+
+\begin{figure}[h!]
+    \centering
+    \begin{circuitikz}[american]
+        % Am-Op
+        \draw (0,0) node[op amp] (opamp) {};
+        
+        % Entrada no inversora a tierra
+        \draw (opamp.+) -- ++(0,-0.5) node[ground]{};
+        
+        % Rama de entrada
+        \draw (opamp.-) to[R, l_=$R_1$] ++(-3,0) 
+              to[sV, l=$V_{in}$] ++(0,-2) node[ground]{};
+        
+        % Nodos para la realimentación
+        \draw (opamp.-) ++(0,1.5) coordinate (fb_up);
+        \draw (opamp.out) ++(0,2) coordinate (out_up);
+        
+        % Realimentación (R2 || C)
+        \draw (opamp.-) -- ++(0,1.5) to[R, l=$R_2$] ++(2.4,0) -| (opamp.out);
+        \draw (opamp.-) ++(0,2.5) coordinate (C_left);
+        \draw (opamp.out) ++(0,3) coordinate (C_right);
+        
+        % Rama del capacitor por encima de R2
+        \draw (opamp.-) |- ++(0,2.5) to[C, l=$C$] ++(2.4,0) -| (opamp.out);
+        
+        % Salida
+        \draw (opamp.out) to[short, *-o] ++(1,0) node[anchor=west]{$V_{out}$};
+    \end{circuitikz}
+    \caption{Filtro activo pasa-bajos inversor de primer orden.}
+\end{figure}
+
+\subsubsection{Deducción de la Función de Transferencia}
+
+Para analizar este circuito, asumimos un Am-Op ideal. Aplicamos el concepto de \textbf{Cortocircuito Virtual}, donde la tensión en el pin inversor ($v_-$) es igual a la tensión en el pin no inversor ($v_+$). Como $v_+$ está a tierra, $v_- = 0V$ (Tierra Virtual).
+
+Aplicamos la Ley de Corrientes de Kirchhoff (LKC) en el nodo inversor. La corriente que entra por $R_1$ debe ser igual a la corriente que circula por la impedancia de realimentación $Z_f$:
+\begin{equation}
+    \frac{V_{in} - 0}{R_1} + \frac{V_{out} - 0}{Z_f} = 0
+\end{equation}
+
+Donde $Z_f$ es el paralelo entre $R_2$ y $C$:
+\begin{equation}
+    Z_f = R_2 \parallel X_C = \frac{R_2 \cdot \frac{1}{j\omega C}}{R_2 + \frac{1}{j\omega C}} = \frac{R_2}{1 + j\omega R_2 C}
+\end{equation}
+
+Sustituyendo $Z_f$ en la ecuación de corrientes y despejando la relación $H(j\omega) = \frac{V_{out}}{V_{in}}$:
+\begin{equation}
+    \frac{V_{in}}{R_1} = -\frac{V_{out}}{\left(\frac{R_2}{1 + j\omega R_2 C}\right)}
+\end{equation}
+
+\begin{equation}
+    H(j\omega) = -\frac{R_2}{R_1} \left( \frac{1}{1 + j\omega R_2 C} \right)
+\end{equation}
+
+\subsubsection{Análisis de la Función}
+
+La función de transferencia puede dividirse en dos componentes fundamentales:
+\begin{equation}
+    H(j\omega) = K \cdot \left( \frac{1}{1 + j\frac{\omega}{\omega_c}} \right)
+\end{equation}
+
+\begin{itemize}
+    \item \textbf{Ganancia en DC ($K$):} Si $\omega \to 0$, el capacitor se comporta como un circuito abierto. El circuito se convierte en un amplificador inversor clásico con ganancia $K = -\frac{R_2}{R_1}$.
+    \item \textbf{Frecuencia de corte ($\omega_c$):} Viene determinada exclusivamente por la red de realimentación: $\omega_c = \frac{1}{R_2 C}$.
+\end{itemize}
+
+Si $\omega \to \infty$, el capacitor actúa como un cortocircuito, haciendo que la ganancia tienda a cero ($H(j\omega) \to 0$).
