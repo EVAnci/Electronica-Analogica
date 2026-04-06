@@ -8,77 +8,170 @@ En consecuencia, un circuito RLC es un circuito pasivo, ya que la potencia que i
 
 Los circuitos que combinan resistores (R), inductores (L) y capacitores (C) son fundamentales para el procesamiento de señales analógicas. Su comportamiento depende de la frecuencia de la señal de entrada, lo que permite utilizarlos para seleccionar o rechazar rangos de frecuencia específicos.
 
-\subsection{El Circuito RLC Serie y la Resonancia}
+\subsection{Frecuencia de Resonancia}
 
 En un circuito RLC serie, la impedancia total viene dada por:
 \begin{equation}
   Z = R + j\left(\omega L - \frac{1}{\omega C}\right)
 \end{equation}
 
-La frecuencia de resonancia ($\omega_0$) ocurre cuando la reactancia inductiva cancela a la reactancia capacitiva, haciendo que la impedancia sea puramente resistiva y alcance su valor mínimo ($Z = R$).
+La frecuencia de resonancia (\(\omega_0\)) ocurre cuando la reactancia inductiva cancela a la reactancia capacitiva, haciendo que la impedancia sea puramente resistiva y alcance su valor mínimo (\(Z = R\)).
 \begin{equation}
-  \omega_0 = \frac{1}{\sqrt{LC}} \quad \text{[rad/s]} \implies f_0 = \frac{1}{2\pi\sqrt{LC}} \quad \text{[Hz]}
+  \omega_0 = \frac{1}{\sqrt{LC}} \quad \text{[rad/s]} \implies f_0 = \frac{1}{2\pi\sqrt{LC}} \quad [\unit{\hertz}]
 \end{equation}
 
-\begin{figure}[h!]
+\begin{figure}[!ht]
   \centering
   \begin{circuitikz}[american voltages]
-    \draw (0,0) to[sV, l=$v_i(t)$] (0,3)
-          to[R, l=$R$, i=$i(t)$] (2,3)
-          to[L, l=$L$] (4,3)
-          to[C, l=$C$] (6,3) -- (6,0) -- (0,0);
+    \draw (0,0) to[sV, l=\(v_i(t)\)] (0,3)
+          to[R, l=\(R\)] (2,3)
+          to[L, l=\(L\)] (4,3)
+          to[C, l=\(C\)] (6,3) -- (6,0) 
+          to[short,i_=\(i(t)\)] (0,0);
   \end{circuitikz}
   \caption{Circuito RLC en serie.}
 \end{figure}
 
-El Factor de Calidad ($Q$) determina la ``agudeza'' de la resonancia. Para un circuito serie:
+\subsection{Factor de calidad \(Q\)}
+
+En un circuito RLC o en un filtro pasivo, el factor de calidad (denotado comúnmente como \(Q\)) es un parámetro adimensional que describe qué tan ``agudo'', selectivo o subamortiguado es el circuito alrededor de su frecuencia de resonancia. 
+
+En términos físicos sencillos, el factor \(Q\) mide la eficiencia del circuito: compara la cantidad de energía que el circuito es capaz de almacenar en sus componentes reactivos (el inductor y el capacitor) frente a la energía que pierde o disipa en forma de calor a través de su resistencia.
+
+La definición general basada en la energía es:
+\[
+  Q = 2\pi \times \frac{\text{Energía máxima almacenada}}{\text{Energía disipada por ciclo}}
+\]
+Para un circuito RLC en serie, la fórmula práctica depende de los valores de la impedancia (\(R\)), la inductancia (\(L\)) y la capacitancia (\(C\)):
 \begin{equation}
   Q = \frac{1}{R} \sqrt{\frac{L}{C}} = \frac{\omega_0 L}{R}
 \end{equation}
+También se relaciona estrechamente con el ancho de banda (\(BW\)) y la frecuencia de resonancia (\(f_0\)):
+\[
+  Q = \frac{f_0}{BW}
+\]
+
+El factor \(Q\) es una herramienta fundamental en el diseño de circuitos porque dicta el comportamiento del filtro. Sirve principalmente para lo siguiente:
+\begin{itemize}
+  \item Determinar la selectividad (Sintonización): En aplicaciones de radiofrecuencia (como sintonizar una emisora de radio o Wi-Fi), se necesita un circuito con un \(Q\) alto. Un \(Q\) alto significa que la curva de respuesta en frecuencia tiene un pico muy estrecho y pronunciado. Esto permite que el circuito ``escuche'' una frecuencia específica (\(f_0\)) y rechace todas las frecuencias vecinas, evitando interferencias.
+  \item Diseñar el ancho de banda de un filtro: Si se está diseñando un filtro pasabanda para audio (como en un ecualizador), el valor de \(Q\) define qué tan amplio es el rango de frecuencias que dejará pasar. 
+    \begin{itemize}
+      \item \(Q\) alto: Filtro de banda estrecha (afecta a un rango muy pequeño de frecuencias).
+      \item \(Q\) bajo: Filtro de banda ancha (afecta a un rango amplio de frecuencias).
+    \end{itemize}
+  \item Controlar el amortiguamiento (Ringing): En filtros paso bajo o paso alto, un \(Q\) demasiado alto puede causar ``ringing'' o sobreoscilaciones cuando la señal cambia bruscamente (como una onda cuadrada). Para evitar esto y tener una respuesta plana sin oscilaciones no deseadas, se suelen diseñar filtros con un \(Q\) bajo (específicamente \(Q = 0.707\), conocido como filtro de Butterworth).
+  \item Estabilidad en osciladores: En los circuitos diseñados para generar señales (osciladores), un factor de calidad muy alto en el elemento resonador (como un cristal de cuarzo, que puede tener un \(Q\) de más de 10,000) garantiza que la frecuencia generada sea extremadamente precisa y estable frente a cambios de temperatura o voltaje.
+\end{itemize}
 
 \subsection{Filtros Analógicos Básicos}
 
-Los filtros pasivos utilizan componentes RLC para modificar la amplitud y fase de una señal en función de su frecuencia. La relación entre la salida y la entrada se define mediante la función de transferencia $H(j\omega) = \frac{V_\text{out}}{V_\text{in}}$.
+Los filtros pasivos utilizan componentes RLC para modificar la amplitud y fase de una señal en función de su frecuencia. La relación entre la salida y la entrada se define mediante la función de transferencia. \[H(j\omega) = \frac{V_\text{out}}{V_\text{in}}\]
 
-\subsubsection{Filtro Pasa-Bajos (Low-Pass Filter)}
+\subsubsection{Filtro Pasa-Bajos}
 
-Permite el paso de frecuencias bajas y atenúa las frecuencias superiores a la frecuencia de corte ($\omega_c$). En un filtro RC estándar, la salida se toma en el capacitor.
+Permite el paso de frecuencias bajas y atenúa las frecuencias superiores a la frecuencia de corte (\(\omega_c\)). En un filtro RC estándar, la salida se toma en el capacitor.
 \begin{equation}
   H(j\omega) = \frac{1}{1 + j\omega RC} \quad ; \quad \omega_c = \frac{1}{RC}
 \end{equation}
 
-\begin{figure}[h!]
+\begin{figure}[!ht]
   \centering
   \begin{circuitikz}
-    \draw (0,0) to[V, l=$V_{in}$] (0,2) 
-          to[R, l=$R$] (3,2) 
-          to[short, -o] (4,2) node[anchor=south]{$V_{out}^+$};
-    \draw (3,2) to[C, l=$C$] (3,0);
-    \draw (0,0) -- (3,0) to[short, -o] (4,0) node[anchor=north]{$V_{out}^-$};
+    \draw (0,0) to[sV, l=\(V_\text{in}\)] (0,2) 
+          to[R, l=\(R\)] (3,2) 
+          to[short, -o] (4,2) node[anchor=south]{\(V_\text{out}^+\)};
+    \draw (3,2) to[C, l=\(C\)] (3,0);
+    \draw (0,0) -- (3,0) to[short, -o] (4,0) node[anchor=north]{\(V_\text{out}^-\)};
   \end{circuitikz}
   \caption{Filtro Pasa-Bajos RC de primer orden.}
+  \label{fig_sch_pasa_bajo}
 \end{figure}
 
-\subsubsection{Filtro Pasa-Altos (High-Pass Filter)}
+Un detalle no trivial es definir qué parte del circuito es \(V_\text{in}\) y qué es \(V_\text{out}\). Cuando se diseña un circuito uno mismo es totalmente libre de elegir qué punto del circuito será la salida. La entrada suele ser más simple de determinar, ya que es la fuente de la señal que se quiere tratar. Para elegir correctamente la salida existen ejemplos como el de la figura \ref{fig_sch_pasa_bajo} que muestra la topología general de un filtro pasa bajos. Así mismo los filtros se dividen en cuatro categorías generales:
+\begin{itemize}
+  \item Filtro pasa bajos: deja pasar las frecuencias más bajas a partir de la frecuencia de corte del filtro.
+  \item Filtro pasa altos: deja pasar las frecuencias más altas a partir de la frecuencia de corte del filtro.
+  \item Filtro pasa banda: deja pasar una banda de frecuencia determinada por el factor de calidad \(Q\) centrada en la frecuencia de corte del filtro.
+  \item Filtro rechaza banda: deja pasar todas las frecuencias menos una banda determinada por el factor de calidad \(Q\) centrada en la frecuencia de corte del filtro.
+\end{itemize}
+Entonces, a continuación se demostrarán las topologías de los filtros restantes.
 
-Atenúa las frecuencias por debajo de $\omega_c$ y permite el paso de las altas. Intercambiando la resistencia y el capacitor del circuito anterior, tomamos la salida en la resistencia.
-\begin{equation}
+\subsubsection{Filtro Pasa-Altos}
+
+Atenúa las frecuencias por debajo de \(\omega_c\) y permite el paso de las altas. Intercambiando la resistencia y el capacitor del circuito de la figura \ref{fig_sch_pasa_bajo}, ahora se toma la salida en la resistencia como se muestra en la figura \ref{fig_sch_pasa_altos}.
+\begin{equation}\label{eq_pasa_altos}
   H(j\omega) = \frac{j\omega RC}{1 + j\omega RC}
 \end{equation}
+\begin{figure}[!ht]
+  \centering
+  \begin{circuitikz}
+    \draw (0,0) to[sV, l=\(V_\text{in}\)] (0,2) 
+          to[C, l=\(C\)] (3,2) 
+          to[short, -o] (4,2) node[anchor=south]{\(V_\text{out}^+\)};
+    \draw (3,2) to[R, l=\(R\)] (3,0);
+    \draw (0,0) -- (3,0) to[short, -o] (4,0) node[anchor=north]{\(V_\text{out}^-\)};
+  \end{circuitikz}
+  \caption{Filtro Pasa-Altos RC de primer orden.}
+  \label{fig_sch_pasa_altos}
+\end{figure}
 
-\subsubsection{Filtro Pasa-Banda (Band-Pass Filter)}
-Permite el paso de un rango específico de frecuencias (Ancho de Banda, $BW$) centrado en $\omega_0$. Se puede implementar tomando la tensión sobre la resistencia en un circuito RLC serie.
+Observe que la función de transferencia \(H(j\omega)\) es la que determina en qué clasificación entra el filtro. ¿Cómo se analiza la función de transferencia? Es simple, se toman los límites para \(\omega\to0\) y \(\omega\to\infty\). Véase el caso del filtro pasa altos (ecuación \eqref{eq_pasa_altos}):
+\begin{alignat*}{3}
+  &\text{Si}                      & \omega &\to 0      & \quad \Rightarrow & \quad H(j\omega) \to 0 \\ 
+  &\text{Por otro lado si} \quad  & \omega &\to \infty & \quad \Rightarrow & \quad H(j\omega) \to 1
+\end{alignat*}
+En definitiva, las frecuencias bajas \(\omega\to0\) son bloqueadas por el filtro \(H\to0\) y las frecuencias altas \(\omega\to\infty\) las deja pasar \(H\to1\). Esto tiene sentido físico, es decir, si analiza el comportamiento físico de los componentes del circuito de la figura \ref{fig_sch_pasa_altos} notará que el capacitor \(C\) bloquea las frecuencias bajas debido a su propia naturaleza física, mas su impedancia está dada por 
+\[
+  Z_C = j\frac{1}{\omega C}
+\]
+Entonces, si \(\omega\to 0\) (baja frecuencia) la impedancia es muy grande.
+
+\subsubsection{Filtro Pasa-Banda}
+
+La función de transferencia para este circuito, tomando la salida en la resistencia, se define como:
 \begin{equation}
-  BW = \frac{\omega_0}{Q} = \frac{R}{L} \quad \text{[rad/s]}
+  H(j\omega) = \frac{R}{R + j\left(\omega L - \frac{1}{\omega C}\right)}
+\end{equation}
+Además, la frecuencia de resonancia (o frecuencia central) \(\omega_0\) ocurre cuando las reactancias inductiva y capacitiva se anulan mutuamente:
+\begin{equation}
+  \omega_0 = \frac{1}{\sqrt{LC}} \quad \text{[rad/s]}
 \end{equation}
 
-\subsubsection{Filtro Rechaza-Banda (Band-Stop / Notch Filter)}
-Atenúa fuertemente las señales que se encuentran en una banda de frecuencias específica, dejando pasar las demás. En un RLC serie, esto se logra tomando la tensión de salida sobre el conjunto LC.
+\begin{figure}[!ht]
+  \centering
+  \begin{circuitikz}
+    \draw (0,0) to[sV, l=\(V_\text{in}\)] (0,2) 
+          to[L, l=\(L\)] (2,2)
+          to[C, l=\(C\)] (4,2) 
+          to[short, -o] (5,2) node[anchor=south]{\(V_\text{out}^+\)};
+    \draw (4,2) to[R, l=\(R\)] (4,0);
+    \draw (0,0) -- (4,0) to[short, -o] (5,0) node[anchor=north]{\(V_\text{out}^-\)};
+  \end{circuitikz}
+  \caption{Filtro Pasa-Banda RLC serie de segundo orden.}
+  \label{fig_sch_pasa_banda}
+\end{figure}
+
+Al igual que con los filtros anteriores, podemos comprender la función de transferencia analizando sus límites en los extremos del espectro y en su frecuencia de resonancia \(\omega_0\):
+\begin{alignat*}{3}
+  &\text{Si}            & \omega &\to 0      & \quad \Rightarrow & \quad H(j\omega) \to 0 \\ 
+  &\text{Si}            & \omega &\to \infty & \quad \Rightarrow & \quad H(j\omega) \to 0 \\
+  &\text{Pero si} \quad & \omega &= \omega_0 & \quad \Rightarrow & \quad H(j\omega) = 1
+\end{alignat*}
+
+Desde el punto de vista físico, este comportamiento conjunto tiene total sentido al observar el circuito de la figura \ref{fig_sch_pasa_banda}. A frecuencias muy bajas (\(\omega \to 0\)), el capacitor actúa casi como un circuito abierto debido a que su impedancia \(Z_C \to \infty\), bloqueando la señal. Por el contrario, a frecuencias muy altas (\(\omega \to \infty\)), es el inductor el que asume el rol de circuito abierto debido a que su impedancia \(Z_L \to \infty\), bloqueando también la señal. 
+
+El fenómeno interesante ocurre exactamente en la frecuencia de resonancia \(\omega_0\). En este punto, las impedancias del capacitor y el inductor son iguales en magnitud pero de signo opuesto (\(Z_L + Z_C = 0\)), cancelándose entre sí. Como resultado, el circuito RLC se comporta de forma puramente resistiva y la señal de entrada pasa de forma íntegra hacia la salida a través de la resistencia \(R\).
+
+\subsubsection{Filtro Rechaza-Banda}
+
+El filtro rechaza-banda (o filtro trampa) realiza la función opuesta al pasa-banda: bloquea un rango específico de frecuencias y permite el paso de todas las demás. Utilizando los mismos componentes RLC en serie, esto se logra tomando la salida sobre el conjunto conformado por el inductor y el capacitor.
 \begin{equation}
   H(j\omega) = \frac{1 - \omega^2 LC}{1 - \omega^2 LC + j\omega RC}
 \end{equation}
 
-\subsection*{Preguntas}
+\section{Ejercicios para el lector}
+
+\subsection{Preguntas teóricas}
 
 \begin{enumerate}
   \item ¿Cuáles son las diferencias entre un circuito activo y uno pasivo?
@@ -92,87 +185,90 @@ Atenúa fuertemente las señales que se encuentran en una banda de frecuencias e
 \subsubsection*{Respuestas}
 
 \begin{enumerate}
-  \item Un filtro pasivo tiene la característica de disipar la misma cantidad de potencia que le es entregada por su fuente. En un circuito activo algunos componentes reciben una alimentación adicional, entregando más potencia al circuito.
-  \item Un filtro es un circuito que modifica la fase y la amplitud de la corriente del circuito.
+  \item Un circuito pasivo no puede entregar a la salida más potencia de la que recibe de la señal de entrada (su ganancia de potencia es \(\leqslant 1\)). Un circuito activo, gracias a su fuente de alimentación adicional, puede amplificar la señal y lograr una ganancia de potencia \(>1\).
+  \item Un filtro es un circuito diseñado para modificar la amplitud y la fase de una señal eléctrica en función de su frecuencia, permitiendo el paso de ciertos rangos de frecuencia y atenuando otros.
   \item La función de transferencia se define como \(H(j\omega)=\frac{V_\text{out}}{V_\text{in}}\) y sirve para determinar como se modifica la señal de salida respecto a la de entrada en función de la frecuencia. De esa manera se puede determinar ante qué tipo de filtro se está.
-  \item Se usan capacitores e inductores debido a sus características en función de la frecuencia. Actúan como impedancias que varían con el valor de la frecuencia. Esto permite tener valores altos de impedancia o el mismo valor de \(R\) si se opera sobre la frecuencia de resonancia.
-  \item La frecuencia de resonancia es la frecuencia \(\omega_0\) a la cual la impedancia capacitiva e inductiva se cancelan.
+  \item Existen esencialmente cuatro tipos de filtros: pasa bajos, pasa altos, pasa banda y rechaza banda.
+  \item Se usan capacitores e inductores debido a sus características en función de la frecuencia. Actúan como reactancias que varían con el valor de la frecuencia. Esto permite tener valores altos de impedancia o el mismo valor de \(R\) si se opera sobre la frecuencia de resonancia.
+  \item La frecuencia de resonancia es la frecuencia \(\omega_0\) a la cual la reactancia capacitiva e inductiva son de igual magnitud pero de signo opuesto, y por ende se cancelan y se obtiene una impedancia \(Z\) puramente resistiva.
 \end{enumerate}
 
-\subsection{Ejemplos Prácticos: Deducción de la Función de Transferencia}
+\subsection{Ejercicios Prácticos: Deducción de la Función de Transferencia}
 
-\subsubsection{Ejemplo 1: Filtro Pasa-Altos RC (Primer Orden)}
+\subsubsection{Ejercicio 1: Filtro Pasa-Altos RC (Primer Orden)}
 
-En este circuito, la señal de salida se toma en paralelo a la resistencia, lo que nos permite bloquear las bajas frecuencias y dejar pasar las altas.
-
+Obtener la función de transferencia \(H(j\omega)\) para el circuito representado en la figura \ref{fig_sch_ejercicio_1}.
 \begin{figure}[!ht]
   \centering
   \begin{circuitikz}[american voltages]
-    \draw (0,0) to[V, l=$V_{in}$] (0,2)
-          to[C, l=$C$] (3,2)
-          to[short, -o] (4,2) node[anchor=south]{$V_{out}^+$};
-    \draw (3,2) to[R, l=$R$] (3,0);
-    \draw (0,0) -- (3,0) to[short, -o] (4,0) node[anchor=north]{$V_{out}^-$};
+    \draw (0,0) to[sV, l=\(V_{in}\)] (0,2)
+          to[C, l=\(C\)] (3,2)
+          to[short, -o] (4,2) node[anchor=south]{\(V_{out}^+\)};
+    \draw (3,2) to[R, l=\(R\)] (3,0);
+    \draw (0,0) -- (3,0) to[short, -o] (4,0) node[anchor=north]{\(V_{out}^-\)};
   \end{circuitikz}
   \caption{Esquema de un Filtro Pasa-Altos RC.}
+  \label{fig_sch_ejercicio_1}
 \end{figure}
 
-Aplicamos la regla del divisor de tensión. Sabiendo que la impedancia del capacitor es $Z_C = \frac{1}{j\omega C}$ y la de la resistencia es $Z_R = R$:
+\paragraph*{Solución} 
+
+En este circuito, la señal de salida se toma en paralelo a la resistencia, lo que nos permite bloquear las bajas frecuencias y dejar pasar las altas.
+
+Aplicamos la regla del divisor de tensión. Sabiendo que la impedancia del capacitor es \(Z_C = \frac{1}{j\omega C}\) y la de la resistencia es \(Z_R = R\):
 \begin{equation}
   V_{out} = V_{in} \frac{R}{R + \frac{1}{j\omega C}}
 \end{equation}
 
-Despejando la relación $H(j\omega) = \frac{V_{out}}{V_{in}}$ y multiplicando numerador y denominador por $j\omega C$ para eliminar la fracción anidada, obtenemos la forma canónica:
+Despejando la relación \(H(j\omega) = \frac{V_{out}}{V_{in}}\) y multiplicando numerador y denominador por \(j\omega C\) para eliminar la fracción anidada, obtenemos la forma canónica:
 \begin{equation}
   H(j\omega) = \frac{R \cdot j\omega C}{\left(R + \frac{1}{j\omega C}\right) j\omega C} = \frac{j\omega RC}{1 + j\omega RC}
 \end{equation}
 
 \textbf{Análisis de límites:}
 \begin{itemize}
-  \item Si $\omega \to 0$, $H(j\omega) \to 0$ (Bloquea bajas frecuencias).
-  \item Si $\omega \to \infty$, $H(j\omega) \to 1$ (Permite el paso de altas frecuencias).
+  \item Si \(\omega \to 0\), \(H(j\omega) \to 0\) (Bloquea bajas frecuencias).
+  \item Si \(\omega \to \infty\), \(H(j\omega) \to 1\) (Permite el paso de altas frecuencias).
 \end{itemize}
 
-\subsubsection{Ejemplo 2: Filtro Pasa-Bajos RLC (Segundo Orden)}
+\subsubsection{Ejercicio 2: Filtro Pasa-Bajos RLC (Segundo Orden)}
 
-En este sistema de segundo orden, la tensión de salida se toma en paralelo al capacitor. 
-
+Obtener la función de transferencia del circuito de la figura \ref{fig_sch_ejercicio_2}. Este circuito se denomina de segundo orden ¿Por qué?
 \begin{figure}[!ht]
   \centering
   \begin{circuitikz}[american voltages]
-    \draw (0,0) to[V, l=$V_{in}$] (0,2)
-          to[L, l=$L$] (2,2)
-          to[R, l=$R$] (4,2)
-          to[short, -o] (5,2) node[anchor=south]{$V_{out}^+$};
-    \draw (4,2) to[C, l=$C$] (4,0);
-    \draw (0,0) -- (4,0) to[short, -o] (5,0) node[anchor=north]{$V_{out}^-$};
+    \draw (0,0) to[sV, l=\(V_{in}\)] (0,2)
+          to[L, l=\(L\)] (2,2)
+          to[R, l=\(R\)] (4,2)
+          to[short, -o] (5,2) node[anchor=south]{\(V_{out}^+\)};
+    \draw (4,2) to[C, l=\(C\)] (4,0);
+    \draw (0,0) -- (4,0) to[short, -o] (5,0) node[anchor=north]{\(V_{out}^-\)};
   \end{circuitikz}
   \caption{Esquema de un Filtro Pasa-Bajos RLC serie.}
+  \label{fig_sch_ejercicio_2}
 \end{figure}
 
-Partimos de que la corriente $i$ es la misma para todos los componentes en serie. La impedancia total es $Z = R + j\omega L + \frac{1}{j\omega C}$.
+En este sistema de segundo orden, la tensión de salida se toma en paralelo al capacitor. Partimos de que la corriente \(i\) es la misma para todos los componentes en serie. La impedancia total es \(Z = R + j\omega L + \frac{1}{j\omega C}\).
 \begin{equation}
   i = \frac{V_{in}}{Z} \quad \text{y} \quad V_{out} = i \cdot \frac{1}{j\omega C}
 \end{equation}
 
-Sustituyendo la corriente en la ecuación de $V_{out}$ y despejando $H(j\omega)$:
+Sustituyendo la corriente en la ecuación de \(V_{out}\) y despejando \(H(j\omega)\):
 \begin{equation}
   H(j\omega) = \frac{V_{out}}{V_{in}} = \frac{\frac{1}{j\omega C}}{R + j\omega L + \frac{1}{j\omega C}}
 \end{equation}
 
-Para simplificar, multiplicamos el numerador y el denominador por $j\omega C$. Recordando que $j^2 = -1$:
+Para simplificar, multiplicamos el numerador y el denominador por \(j\omega C\). Recordando que \(j^2 = -1\):
 \begin{equation}
   H(j\omega) = \frac{1}{j\omega R C + j^2\omega^2 LC + 1} = \frac{1}{1 - \omega^2 LC + j\omega RC}
 \end{equation}
 
 \textbf{Análisis de límites y selectividad:}
 \begin{itemize}
-  \item Si $\omega \to 0$, $H(j\omega) \to 1$ (Permite el paso de bajas frecuencias y DC).
-  \item Si $\omega \to \infty$, $H(j\omega) \to 0$ (Bloquea altas frecuencias).
+  \item Si \(\omega \to 0\), \(H(j\omega) \to 1\) (Permite el paso de bajas frecuencias y DC).
+  \item Si \(\omega \to \infty\), \(H(j\omega) \to 0\) (Bloquea altas frecuencias).
 \end{itemize}
-Al ser un filtro de segundo orden (presencia del término $\omega^2$), la amplitud decae más rápido respecto a la frecuencia ($-40\text{ dB/década}$), haciéndolo mucho más selectivo que el filtro RC de primer orden.
-
-\section{Circuitos activos básicos}
+Al ser un filtro de segundo orden (presencia del término \(\omega^2\)), la amplitud decae más rápido respecto a la frecuencia (\(-40\text{ dB/década}\)), haciéndolo mucho más selectivo que el filtro RC de primer orden.
 
 \section{Filtros Activos de Primer Orden}
 
@@ -180,72 +276,72 @@ A diferencia de los filtros pasivos, los filtros activos incorporan elementos am
 
 \subsection{Filtro Pasa-Bajos Inversor}
 
-Esta topología se basa en la configuración clásica del amplificador inversor, pero reemplazando la resistencia de realimentación por una impedancia compleja formada por una resistencia ($R_2$) en paralelo con un capacitor ($C$).
+Esta topología se basa en la configuración clásica del amplificador inversor, pero reemplazando la resistencia de realimentación por una impedancia compleja formada por una resistencia (\(R_2\)) en paralelo con un capacitor (\(C\)).
 
-\begin{figure}[h!]
-    \centering
-    \begin{circuitikz}[american]
-        % Am-Op
-        \draw (0,0) node[op amp] (opamp) {};
-        
-        % Entrada no inversora a tierra
-        \draw (opamp.+) -- ++(0,-0.5) node[ground]{};
-        
-        % Rama de entrada
-        \draw (opamp.-) to[R, l_=$R_1$] ++(-3,0) 
-              to[sV, l=$V_{in}$] ++(0,-2) node[ground]{};
-        
-        % Nodos para la realimentación
-        \draw (opamp.-) ++(0,1.5) coordinate (fb_up);
-        \draw (opamp.out) ++(0,2) coordinate (out_up);
-        
-        % Realimentación (R2 || C)
-        \draw (opamp.-) -- ++(0,1.5) to[R, l=$R_2$] ++(2.4,0) -| (opamp.out);
-        \draw (opamp.-) ++(0,2.5) coordinate (C_left);
-        \draw (opamp.out) ++(0,3) coordinate (C_right);
-        
-        % Rama del capacitor por encima de R2
-        \draw (opamp.-) |- ++(0,2.5) to[C, l=$C$] ++(2.4,0) -| (opamp.out);
-        
-        % Salida
-        \draw (opamp.out) to[short, *-o] ++(1,0) node[anchor=west]{$V_{out}$};
-    \end{circuitikz}
-    \caption{Filtro activo pasa-bajos inversor de primer orden.}
+\begin{figure}[!ht]
+  \centering
+  \begin{circuitikz}[american]
+    % Am-Op
+    \draw (0,0) node[op amp] (opamp) {};
+    
+    % Entrada no inversora a tierra
+    \draw (opamp.+) -- ++(0,-0.5) node[ground]{};
+    
+    % Rama de entrada
+    \draw (opamp.-) to[R, l_=\(R_1\)] ++(-3,0) 
+          to[sV, l=\(V_{in}\)] ++(0,-2) node[ground]{};
+    
+    % Nodos para la realimentación
+    \draw (opamp.-) ++(0,1.5) coordinate (fb_up);
+    \draw (opamp.out) ++(0,2) coordinate (out_up);
+    
+    % Realimentación (R2 || C)
+    \draw (opamp.-) -- ++(0,1.5) to[R, l=\(R_2\)] ++(2.4,0) -| (opamp.out);
+    \draw (opamp.-) ++(0,2.5) coordinate (C_left);
+    \draw (opamp.out) ++(0,3) coordinate (C_right);
+    
+    % Rama del capacitor por encima de R2
+    \draw (opamp.-) |- ++(0,3) to[C, l=\(C\)] ++(2.4,0) -| (opamp.out);
+    
+    % Salida
+    \draw (opamp.out) to[short, *-o] ++(1,0) node[anchor=west]{\(V_{out}\)};
+  \end{circuitikz}
+  \caption{Filtro activo pasa-bajos inversor de primer orden.}
 \end{figure}
 
 \subsubsection{Deducción de la Función de Transferencia}
 
-Para analizar este circuito, asumimos un Am-Op ideal. Aplicamos el concepto de \textbf{Cortocircuito Virtual}, donde la tensión en el pin inversor ($v_-$) es igual a la tensión en el pin no inversor ($v_+$). Como $v_+$ está a tierra, $v_- = 0V$ (Tierra Virtual).
+Para analizar este circuito, asumimos un Am-Op ideal. Aplicamos el concepto de \textbf{Cortocircuito Virtual}, donde la tensión en el pin inversor (\(v_-\)) es igual a la tensión en el pin no inversor (\(v_+\)). Como \(v_+\) está a tierra, \(v_- = 0V\) (Tierra Virtual).
 
-Aplicamos la Ley de Corrientes de Kirchhoff (LKC) en el nodo inversor. La corriente que entra por $R_1$ debe ser igual a la corriente que circula por la impedancia de realimentación $Z_f$:
+Aplicamos la Ley de Corrientes de Kirchhoff en el nodo inversor. La corriente que entra por \(R_1\) debe ser igual a la corriente que circula por la impedancia de realimentación \(Z_f\):
 \begin{equation}
-    \frac{V_{in} - 0}{R_1} + \frac{V_{out} - 0}{Z_f} = 0
+  \frac{V_{in} - 0}{R_1} + \frac{V_{out} - 0}{Z_f} = 0
 \end{equation}
 
-Donde $Z_f$ es el paralelo entre $R_2$ y $C$:
+Donde \(Z_f\) es el paralelo entre \(R_2\) y \(C\):
 \begin{equation}
-    Z_f = R_2 \parallel X_C = \frac{R_2 \cdot \frac{1}{j\omega C}}{R_2 + \frac{1}{j\omega C}} = \frac{R_2}{1 + j\omega R_2 C}
+  Z_f = R_2 \parallel X_C = \frac{R_2 \cdot \frac{1}{j\omega C}}{R_2 + \frac{1}{j\omega C}} = \frac{R_2}{1 + j\omega R_2 C}
 \end{equation}
 
-Sustituyendo $Z_f$ en la ecuación de corrientes y despejando la relación $H(j\omega) = \frac{V_{out}}{V_{in}}$:
+Sustituyendo \(Z_f\) en la ecuación de corrientes y despejando la relación \(H(j\omega)\):
 \begin{equation}
-    \frac{V_{in}}{R_1} = -\frac{V_{out}}{\left(\frac{R_2}{1 + j\omega R_2 C}\right)}
+  \frac{V_\text{in}}{R_1} = -\frac{V_\text{out}}{\left(\frac{R_2}{1 + j\omega R_2 C}\right)}
 \end{equation}
 
 \begin{equation}
-    H(j\omega) = -\frac{R_2}{R_1} \left( \frac{1}{1 + j\omega R_2 C} \right)
+  H(j\omega) = -\frac{R_2}{R_1} \left( \frac{1}{1 + j\omega R_2 C} \right)
 \end{equation}
 
 \subsubsection{Análisis de la Función}
 
 La función de transferencia puede dividirse en dos componentes fundamentales:
 \begin{equation}
-    H(j\omega) = K \cdot \left( \frac{1}{1 + j\frac{\omega}{\omega_c}} \right)
+  H(j\omega) = K \cdot \left( \frac{1}{1 + j\frac{\omega}{\omega_c}} \right)
 \end{equation}
 
 \begin{itemize}
-    \item \textbf{Ganancia en DC ($K$):} Si $\omega \to 0$, el capacitor se comporta como un circuito abierto. El circuito se convierte en un amplificador inversor clásico con ganancia $K = -\frac{R_2}{R_1}$.
-    \item \textbf{Frecuencia de corte ($\omega_c$):} Viene determinada exclusivamente por la red de realimentación: $\omega_c = \frac{1}{R_2 C}$.
+  \item \textbf{Ganancia en DC (\(K\)):} Si \(\omega \to 0\), el capacitor se comporta como un circuito abierto. El circuito se convierte en un amplificador inversor clásico con ganancia \(K = -\frac{R_2}{R_1}\).
+  \item \textbf{Frecuencia de corte (\(\omega_c\)):} Viene determinada exclusivamente por la red de realimentación: \(\omega_c = \frac{1}{R_2 C}\).
 \end{itemize}
 
-Si $\omega \to \infty$, el capacitor actúa como un cortocircuito, haciendo que la ganancia tienda a cero ($H(j\omega) \to 0$).
+Si \(\omega \to \infty\), el capacitor actúa como un cortocircuito, haciendo que la ganancia tienda a cero (\(H(j\omega) \to 0\)).
