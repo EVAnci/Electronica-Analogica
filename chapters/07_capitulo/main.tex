@@ -169,6 +169,74 @@ El filtro rechaza-banda (o filtro trampa) realiza la función opuesta al pasa-ba
   H(j\omega) = \frac{1 - \omega^2 LC}{1 - \omega^2 LC + j\omega RC}
 \end{equation}
 
+\subsection{Frecuencia de corte}
+
+La \textit{frecuencia de corte} \(\omega_c\) de un sistema lineal e invariante en el tiempo, particularmente en el análisis de filtros, se define como aquella frecuencia para la cual la potencia de la señal de salida se reduce a la mitad respecto de su valor en la banda pasante.
+
+Dado que, en sistemas eléctricos, la potencia es proporcional al cuadrado de la amplitud de la señal (\(P \propto V^2\)), una reducción a la mitad de la potencia implica que la amplitud de la señal se reduce en un factor de
+\(
+1/\sqrt{2}.
+\)
+Por lo tanto, en la frecuencia de corte se verifica que
+\[
+|H(j\omega_c)| = \frac{1}{\sqrt{2}}\, |H(j\omega)|_{\text{máx}}.
+\]
+
+En términos de ganancia expresada en decibelios, definida como
+\[
+G(\omega) = 20 \log_{10} \big(|H(j\omega)|\big),
+\]
+la condición anterior conduce a
+\[
+G(\omega_c) = 20 \log_{10}\left(\frac{1}{\sqrt{2}}\right) \approx -3.01\ \text{dB}.
+\]
+
+Por esta razón, la frecuencia de corte también se denomina \textit{frecuencia de media potencia} o punto de \textit{-3 dB}.
+
+\subsubsection{Determinación práctica de la frecuencia de corte}
+
+En la práctica, la determinación de \(\omega_c\) se simplifica evitando el uso directo de logaritmos. En su lugar, se iguala la magnitud de la función de transferencia al valor \(\frac{1}{\sqrt{2}}\) (o al valor máximo dividido por \(\sqrt{2}\) en sistemas con ganancia distinta de la unidad), y se resuelve la ecuación resultante.
+
+El procedimiento general es el siguiente:
+\begin{enumerate}
+  \item Se obtiene la función de transferencia \(H(j\omega)\) del sistema.
+  \item Se calcula su magnitud \(|H(j\omega)|\).
+  \item Se impone la condición \(|H(j\omega_c)| = \frac{1}{\sqrt{2}}\).
+  \item Se despeja la frecuencia de corte \(\omega_c\).
+\end{enumerate}
+
+\subsubsection{Ejemplo: filtro pasa-bajos RC}
+
+Considérese un filtro pasa-bajos RC cuya función de transferencia está dada por
+\[
+H(j\omega) = \frac{1}{1 + j\omega RC}.
+\]
+
+La magnitud de dicha función es
+\[
+|H(j\omega)| = \frac{1}{\sqrt{1 + (\omega RC)^2}}.
+\]
+
+Imponiendo la condición de frecuencia de corte:
+\[
+\frac{1}{\sqrt{1 + (\omega_c RC)^2}} = \frac{1}{\sqrt{2}},
+\]
+se obtiene, al elevar al cuadrado ambos miembros,
+\[
+1 + (\omega_c RC)^2 = 2,
+\]
+de donde
+\[
+(\omega_c RC)^2 = 1 \quad \Rightarrow \quad \omega_c RC = 1.
+\]
+
+Finalmente, la frecuencia de corte resulta
+\[
+\omega_c = \frac{1}{RC} \quad \text{[rad/s]}.
+\]
+
+Este resultado constituye una expresión fundamental en el análisis de filtros de primer orden.
+
 \section{Ejercicios para el lector}
 
 \subsection{Preguntas teóricas}
