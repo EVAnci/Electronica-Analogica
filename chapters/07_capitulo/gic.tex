@@ -1,0 +1,119 @@
+\chapter{Convertidor de impedancias generalizado}
+
+Un convertidor de impedancia general (GIC por General impedance converter) es un circuito activo RC que permite simular impedancias tanto reactivas como inductivas. Asimismo, permite variar el módulo de la reactancia modificando componentes resistivos, lo que puede ser útil si se requieren reactancias variables.
+
+La topología del GIC se muestra en la figura \ref{fig_gic}.
+
+\begin{figure}[!ht]
+  \centering
+  % No se deberían usar coordenadas absolutas
+  % Este esquema ha sido realizado con https://www.circuit2tikz.tf.fau.de/designer/
+  \begin{tikzpicture}[transform shape,scale=0.7]
+    \node[op amp, yscale=-1](OA1) at (2.19, 0.49){};
+    \node[op amp, xscale=-1](OA2) at (-2.19, -0.49){};
+    \draw (0, 4.75) to[generic, l={$Z_1$}] (0, 2.5);
+    \draw (0, 2.5) to[generic, l={$Z_2$}] (0, 0);
+    \draw (0, 0) to[generic, l={$Z_3$}] (0, -2.25);
+    \draw (0, -2.25) to[generic, l={$Z_4$}] (0, -4.5);
+    \draw (0, -4.5) to[generic, l={$Z_5$}] (0, -6.75);
+    \draw (-1, -0) to[short] (0, -0);
+    \draw (0, -0) to[short, *-] (1, 0);
+    \draw (3.38, 0.49) to[short] (3.75, 0.5);
+    \draw (3.75, 0.5) to[short] (3.75, -2.25);
+    \draw (3.75, -2.25) to[short, -*] (0, -2.25);
+    \draw (-1, -0.98) to[short] (-1, -4.5);
+    \draw (-1, -4.5) to[short, -*] (0, -4.5);
+    \draw (1, 0.98) to[short] (1, 4.75);
+    \draw (0, 4.75) to[short, *-] (1, 4.75);
+    \draw (-3.38, -0.49) to[short] (-3.75, -0.5);
+    \draw (-3.75, -0.5) to[short] (-3.75, 2.5);
+    \draw (-3.75, 2.5) to[short, -*] (0, 2.5);
+    \node[ground] at (0, -6.75){};
+    \draw (0, 4.75) to[short, -o, l={$V_\text{in}$}] (0, 5.5);
+  \end{tikzpicture}
+  \caption{Topología del GIC.}
+  \label{fig_gic}
+\end{figure}
+
+Impedancia equivalente:
+\[
+  Z_\text{eq}=\frac{Z_1Z_3Z_5}{Z_2Z_4}
+\]
+\section{Simulación de inductancia}
+
+Si hacemos \(Z_1=Z_2=Z_3=Z_5=R\) y \(Z_4=1/(sC)\), entonces, la impedancia equivalente será
+\begin{align*}
+  Z_\text{eq}&=\frac{R\cdot R\cdot R}{R\cdot\frac{1}{sC}}\\
+  Z_\text{eq}&=sCR^2
+\end{align*}
+Vemos que podemos simular un inductor utilizando operacionales, capacitores y resistores. Además, si \(R\) es variable, podemos modificar el valor del inductor simulado. Esta es una de las principales aplicaciones del GIC.
+
+\section{Derivación}
+
+Al GIC se le aplica una diferencia de potencial \(V\) y se genera una corriente \(I\). La impedancia equivalente puede ser calculada como 
+\[
+  Z_\text{eq}=\frac{V}{I}
+\]
+Si consideramos operacionales ideales, vemos que el voltaje de entrada \(V\) aparece en tres nodos (debido al cortocircuito virtual). Los otros dos nodos de interés, denotados como \(V_1\) y \(V_2\) son los voltajes a la salida de los operacionales.
+\begin{figure}[!ht]
+  \centering
+  % Copy paste de la figura \ref{fig_gic}
+  \begin{tikzpicture}[transform shape,scale=0.7]
+    \node[op amp, yscale=-1](OA1) at (2.19, 0.49){};
+    \node[op amp, xscale=-1](OA2) at (-2.19, -0.49){};
+    \draw (0, 4.75) to[generic, l={$Z_1$},i={$I$}] (0, 2.5);
+    \draw (0, 2.5) to[generic, l={$Z_2$},i={$I_a$}] (0, 0);
+    \draw (0, 0) to[generic, l={$Z_3$},i={$I_b$}] (0, -2.25);
+    \draw (0, -2.25) to[generic, l={$Z_4$},i={$I_c$}] (0, -4.5);
+    \draw (0, -4.5) to[generic, l={$Z_5$},i={$I_d$}] (0, -6.75);
+    \draw (-1, -0) to[short] (0, -0);
+    \draw (0, -0) node[above left]{$V$} to[short, *-] (1, 0);
+    \draw (3.38, 0.49) to[short] (3.75, 0.5);
+    \draw (3.75, 0.5) to[short] (3.75, -2.25);
+    \draw (3.75, -2.25) to[short, -*] (0, -2.25) node[left]{$V_2$};
+    \draw (-1, -0.98) to[short] (-1, -4.5);
+    \draw (-1, -4.5) to[short, -*] (0, -4.5) node[above left]{$V$};
+    \draw (1, 0.98) to[short] (1, 4.75);
+    \draw (0, 4.75) node[below left]{$V$} to[short, *-] (1, 4.75);
+    \draw (-3.38, -0.49) to[short] (-3.75, -0.5);
+    \draw (-3.75, -0.5) to[short] (-3.75, 2.5);
+    \draw (-3.75, 2.5) to[short, -*] (0, 2.5) node[above left]{$V_1$};
+    \node[ground] at (0, -6.75){};
+    \draw (0, 4.75) to[short, -o, l={$V_\text{in}$}] (0, 5.5);
+  \end{tikzpicture}
+  \caption{Tensiones y corrientes.}
+\end{figure}
+
+Todas las corrientes que atraviesan el circuito son equivalentes \(I_a=I_b=I_c=I_d=I\).
+
+En el principio, se cumple
+\begin{gather}
+  I=\frac{V-V_1}{Z_1} \notag\\ 
+  V_1 = V - IZ_1 \label{eq_v1}
+\end{gather}
+En el nodo común a las entradas inversoras, se cumple:
+\begin{gather}
+  I_a=I_b \notag\\ 
+  \frac{V_1-V}{Z_2} = \frac{V_2-V}{Z_3} \notag\\ 
+  V_2 -V = \frac{Z_3}{Z_2}(V_1-V) \label{eq_v2}
+\end{gather}
+En el nodo de la entrada no inversora del segundo operacional, se cumple:
+\begin{gather}
+  I_c=I_d \notag\\ 
+  \frac{V_2-V}{Z_4}=\frac{0-V}{Z_5} \notag\\ 
+  V_2-V=-\frac{Z_4}{Z_5}V \label{eq_v3}
+\end{gather}
+Igualamos \eqref{eq_v3} y \eqref{eq_v2}:
+\begin{gather}
+  V_2-V=V_2-V \notag \\ 
+  \frac{Z_3}{Z_2}(V_1-V)=-\frac{Z_4}{Z_5}V \label{eq_v4} 
+\end{gather}
+Reemplazamos \ref{eq_v1} en \ref{eq_v4}
+\begin{align*}
+  \frac{Z_3}{Z_2}(V-IZ_1-V) &=-\frac{Z_4}{Z_5}V \\ 
+  \frac{Z_3}{Z_2}(-IZ_1) &=-\frac{Z_4}{Z_5}V \\ 
+  -\frac{Z_1Z_3}{Z_2}I &= -\frac{Z_4}{Z_5}V \\ 
+  \frac{Z_1Z_3}{Z_2}I &= \frac{Z_4}{Z_5}V \\ 
+  \frac{V}{I} &= \frac{Z_1Z_3Z_5}{Z_2Z_4} \\ 
+  Z_\text{eq} &= \frac{Z_1Z_3Z_5}{Z_2Z_4}
+\end{align*}
