@@ -1,0 +1,81 @@
+\chapter{Filtros activos}
+
+Un circuito activo es aquel que tiene componentes activos. Un componente se denomina activo si es capaz de controlar el flujo de electricidad, usualmente mediante otra señal eléctrica, o si puede introducir ganancia de potencia en el circuito. Ejemplos de componentes activos son los transistores, o los amplificadores operacionales.
+
+En consecuencia, un circuito RLC es un circuito pasivo, ya que la potencia que ingresa a los componentes es la misma potencia que se disipa y se obtiene a la salida del circuito, es decir, no se genera potencia. Antes de continuar con los filtros activos, es conveniente revisar los conceptos de filtros pasivos y sus ecuaciones, ya que para filtros activos se aplicaran las mismas ecuaciones y análisis pero con amplificadores operacionales.
+
+\section{Filtros Activos de Primer Orden}
+
+A diferencia de los filtros pasivos, los filtros activos incorporan elementos amplificadores como el Amplificador Operacional (Am-Op). Esto permite aislar etapas mediante adaptación de impedancias y proporcionar una ganancia de potencia mayor a la unidad.
+
+\subsection{Filtro Pasa-Bajos Inversor}
+
+Esta topología se basa en la configuración clásica del amplificador inversor, pero reemplazando la resistencia de realimentación por una impedancia compleja formada por una resistencia (\(R_2\)) en paralelo con un capacitor (\(C\)).
+
+\begin{figure}[!ht]
+  \centering
+  \begin{circuitikz}[american]
+    % Am-Op
+    \draw (0,0) node[op amp] (opamp) {};
+    
+    % Entrada no inversora a tierra
+    \draw (opamp.+) -- ++(0,-0.5) node[ground]{};
+    
+    % Rama de entrada
+    \draw (opamp.-) to[R, l_=\(R_1\)] ++(-3,0) 
+          to[sV, l=\(V_{in}\)] ++(0,-2) node[ground]{};
+    
+    % Nodos para la realimentación
+    \draw (opamp.-) ++(0,1.5) coordinate (fb_up);
+    \draw (opamp.out) ++(0,2) coordinate (out_up);
+    
+    % Realimentación (R2 || C)
+    \draw (opamp.-) -- ++(0,1.5) to[R, l=\(R_2\)] ++(2.4,0) -| (opamp.out);
+    \draw (opamp.-) ++(0,2.5) coordinate (C_left);
+    \draw (opamp.out) ++(0,3) coordinate (C_right);
+    
+    % Rama del capacitor por encima de R2
+    \draw (opamp.-) |- ++(0,3) to[C, l=\(C\)] ++(2.4,0) -| (opamp.out);
+    
+    % Salida
+    \draw (opamp.out) to[short, *-o] ++(1,0) node[anchor=west]{\(V_{out}\)};
+  \end{circuitikz}
+  \caption{Filtro activo pasa-bajos inversor de primer orden.}
+\end{figure}
+
+\subsubsection{Deducción de la Función de Transferencia}
+
+Para analizar este circuito, asumimos un Am-Op ideal. Aplicamos el concepto de \textbf{Cortocircuito Virtual}, donde la tensión en el pin inversor (\(v_-\)) es igual a la tensión en el pin no inversor (\(v_+\)). Como \(v_+\) está a tierra, \(v_- = 0V\) (Tierra Virtual).
+
+Aplicamos la Ley de Corrientes de Kirchhoff en el nodo inversor. La corriente que entra por \(R_1\) debe ser igual a la corriente que circula por la impedancia de realimentación \(Z_f\):
+\begin{equation}
+  \frac{V_{in} - 0}{R_1} + \frac{V_{out} - 0}{Z_f} = 0
+\end{equation}
+
+Donde \(Z_f\) es el paralelo entre \(R_2\) y \(C\):
+\begin{equation}
+  Z_f = R_2 \parallel X_C = \frac{R_2 \cdot \frac{1}{j\omega C}}{R_2 + \frac{1}{j\omega C}} = \frac{R_2}{1 + j\omega R_2 C}
+\end{equation}
+
+Sustituyendo \(Z_f\) en la ecuación de corrientes y despejando la relación \(H(j\omega)\):
+\begin{equation}
+  \frac{V_\text{in}}{R_1} = -\frac{V_\text{out}}{\left(\frac{R_2}{1 + j\omega R_2 C}\right)}
+\end{equation}
+
+\begin{equation}
+  H(j\omega) = -\frac{R_2}{R_1} \left( \frac{1}{1 + j\omega R_2 C} \right)
+\end{equation}
+
+\subsubsection{Análisis de la Función}
+
+La función de transferencia puede dividirse en dos componentes fundamentales:
+\begin{equation}
+  H(j\omega) = K \cdot \left( \frac{1}{1 + j\frac{\omega}{\omega_c}} \right)
+\end{equation}
+
+\begin{itemize}
+  \item \textbf{Ganancia en DC (\(K\)):} Si \(\omega \to 0\), el capacitor se comporta como un circuito abierto. El circuito se convierte en un amplificador inversor clásico con ganancia \(K = -\frac{R_2}{R_1}\).
+  \item \textbf{Frecuencia de corte (\(\omega_c\)):} Viene determinada exclusivamente por la red de realimentación: \(\omega_c = \frac{1}{R_2 C}\).
+\end{itemize}
+
+Si \(\omega \to \infty\), el capacitor actúa como un cortocircuito, haciendo que la ganancia tienda a cero (\(H(j\omega) \to 0\)).

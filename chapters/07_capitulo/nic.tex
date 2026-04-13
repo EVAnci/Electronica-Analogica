@@ -1,0 +1,69 @@
+\chapter{Convertidor de impedancia negativa}
+
+Es un circuito que se comporta como una resistencia de valor negativo \(Z=-R\). Se comporta como una carga que, en lugar de disipar energía, aporta energía al circuito. El diagrama topológico del circuito se muestra en la figura \ref{fig_nic}.
+\begin{figure}[!ht]
+  \centering
+  \begin{circuitikz}
+    \node[op amp,yscale=-1] (A) at (0,0) {};
+    \draw (A.+) to[short] ++(0,1) coordinate(vin) to[R,l=$R$] (vin -| A.out) to[short,-*] (A.out);
+    \draw (A.-) to[short] ++(0,-1) coordinate(grnd) to[R,l=$R$] (grnd -| A.out) to[short] (A.out);
+    \draw (grnd) to[R,l_={$R$},*-] ++(-3,0) coordinate(len) node[ground]{};
+    \draw (vin) to[short,*-o] (vin -| len) node[left]{$V_\text{in}$};
+    \draw (A.out) to[short,-o] ++(0.5,0) node[right]{$V_\text{out}$};
+  \end{circuitikz}
+  \caption{Diagrama topológico del NIC.}
+  \label{fig_nic}
+\end{figure}
+La impedancia equivalente es 
+\[
+  Z_\text{eq}=-R
+\]
+
+\section{Derivación}
+
+Al NIC se le aplica un voltaje \(V_\text{in}\) y se genera una corriente \(I\). La impedancia equivalente puede ser calculada como 
+\[
+  Z_\text{eq} = \frac{V}{I}
+\]
+\begin{figure}[!ht]
+  \centering
+  \begin{circuitikz}
+    \node[op amp,yscale=-1] (A) at (0,0) {};
+    \draw (A.+) to[short] ++(0,1) coordinate(vin) to[R,l=$R$] (vin -| A.out) to[short,i={$I$},-*] (A.out);
+    \draw (A.-) to[short] ++(0,-1) coordinate(grnd) to[R,l=$R$] (grnd -| A.out) to[short,i_<={$I_a$}] (A.out);
+    \draw (grnd) to[R,l_={$R$},i={$I_b$},*-] ++(-3,0) coordinate(len) node[ground]{};
+    \draw (vin) to[short,*-o] (vin -| len) node[left]{$V$};
+    \draw (A.out) to[short,-o] ++(0.5,0) node[right]{$V_\text{out}$};
+  \end{circuitikz}
+  \caption{Análisis de corrientes del NIC.}
+\end{figure}
+
+En el nodo del terminal no inversor, se cumple
+\begin{align}
+  I_a&=I_b\notag\\ 
+  \frac{V_\text{out}-V}{R}&=\frac{V-0}{R} \notag\\ 
+  V_\text{out}-V &= V \notag \\ 
+  V_\text{out} &= 2V \label{eq_vout_nic}
+\end{align}
+Calculamos la corriente en la rama superior
+\begin{equation}\label{eq_nic_rama_sup}
+  I=\frac{V-V_\text{out}}{R}
+\end{equation}
+Reemplazando \eqref{eq_vout_nic} en \eqref{eq_nic_rama_sup}:
+\begin{align*}
+  I&=\frac{V-2V}{R} \\ 
+  I&=-\frac{V}{R} \\ 
+  \frac{V}{I}&=-R \\ 
+  Z_\text{eq}&= -R
+\end{align*}
+
+\section{Ejercicios para el lector}
+
+\subsection{Preguntas teóricas}
+
+\begin{enumerate}
+  \item ¿Qué significa NIC?
+  \item ¿Para qué sirve?
+  \item ¿De donde obtiene la energía adicional el circuito NIC?
+  \item ¿Cuántos amplificadores operacionales necesito para construir un NIC?
+\end{enumerate}

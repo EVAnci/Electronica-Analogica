@@ -109,11 +109,111 @@ Igualamos \eqref{eq_v3} y \eqref{eq_v2}:
   \frac{Z_3}{Z_2}(V_1-V)=-\frac{Z_4}{Z_5}V \label{eq_v4} 
 \end{gather}
 Reemplazamos \ref{eq_v1} en \ref{eq_v4}
-\begin{align*}
-  \frac{Z_3}{Z_2}(V-IZ_1-V) &=-\frac{Z_4}{Z_5}V \\ 
-  \frac{Z_3}{Z_2}(-IZ_1) &=-\frac{Z_4}{Z_5}V \\ 
-  -\frac{Z_1Z_3}{Z_2}I &= -\frac{Z_4}{Z_5}V \\ 
-  \frac{Z_1Z_3}{Z_2}I &= \frac{Z_4}{Z_5}V \\ 
-  \frac{V}{I} &= \frac{Z_1Z_3Z_5}{Z_2Z_4} \\ 
-  Z_\text{eq} &= \frac{Z_1Z_3Z_5}{Z_2Z_4}
-\end{align*}
+\begin{align}
+  \frac{Z_3}{Z_2}(V-IZ_1-V) &=-\frac{Z_4}{Z_5}V \notag\\ 
+  \frac{Z_3}{Z_2}(-IZ_1) &=-\frac{Z_4}{Z_5}V \notag\\ 
+  -\frac{Z_1Z_3}{Z_2}I &= -\frac{Z_4}{Z_5}V \notag\\ 
+  \frac{Z_1Z_3}{Z_2}I &= \frac{Z_4}{Z_5}V \notag\\ 
+  \frac{V}{I} &= \frac{Z_1Z_3Z_5}{Z_2Z_4} \notag\\ 
+  Z_\text{eq} &= \frac{Z_1Z_3Z_5}{Z_2Z_4} \label{eq_gic}
+\end{align}
+
+Para comprender por qué este circuito puede simular un inductor, debemos recordar que la impedancia de un inductor ideal en el dominio de Laplace está dada por \(Z_L = sL\).
+
+Si observamos nuestra ecuación resultante \eqref{eq_gic}:
+\[
+  Z_\text{eq} = \frac{Z_1Z_3Z_5}{Z_2Z_4}
+\]
+notamos que para obtener un término \(s\) en el numerador (y así emular \(Z_L\)), necesitamos que al menos una de las impedancias en el denominador (\(Z_2\) o \(Z_4\)) tenga un comportamiento capacitivo, cuya impedancia es \(Z_C = \frac{1}{sC}\). 
+
+La configuración más común, conocida como el circuito de Antoniou, consiste en elegir \(Z_4\) como un capacitor (\(Z_4 = \frac{1}{sC}\)) y el resto de los componentes como resistores (\(Z_1 = R_1\), \(Z_2 = R_2\), \(Z_3 = R_3\), \(Z_5 = R_5\)). 
+
+Sustituyendo estos valores en nuestra ecuación de impedancia equivalente, obtenemos:
+\begin{align}
+  Z_\text{eq} &= \frac{R_1 R_3 R_5}{R_2 \left(\frac{1}{sC}\right)} \notag\\
+  Z_\text{eq} &= s \left( \frac{R_1 R_3 R_5 C}{R_2} \right) \label{eq_ind_eq}
+\end{align}
+
+Comparando la ecuación \eqref{eq_ind_eq} con la impedancia de un inductor clásico, es evidente que el circuito se comporta desde sus terminales de entrada exactamente como un inductor cuyo valor equivalente es:
+\[
+  L_\text{eq} = \frac{R_1 R_3 R_5 C}{R_2}
+\]
+
+Esta es la principal utilidad del GIC: permite sintetizar inductores de alto valor y alta calidad en circuitos integrados utilizando únicamente resistores, capacitores y amplificadores operacionales, evitando así los problemas de tamaño, peso, y pérdidas magnéticas asociados a las bobinas reales.
+
+\section{Caso real}
+
+Si en lugar de trabajar con un modelo ideal (donde existe un cortocircuito virtual) trabajamos con un modelo real, se obtiene la siguiente expresión:
+\[
+  Z_\text{eq}=\frac{Z_1Z_3Z_5}{Z_2Z_4}\left(\frac{
+    \frac{\left(\frac{Z_2}{Z_3}+1\right)\left(\frac{Z_4}{Z_5}+1\right)}{A_1(f)A_2(f)}+\frac{Z_2}{Z_3}\left(\frac{Z_4}{Z_5}+1\right)\frac{1}{A_2(f)}+\left(\frac{Z_4}{Z_5}+1\right)\frac{1}{A_1(f)}+1}{
+    \frac{\left(\frac{Z_3}{Z_2}+1\right)\left(\frac{Z_5}{Z_4}+1\right)}{A_1(f)A_2(f)}+\frac{Z_3}{Z_2}\left(\frac{Z_4}{Z_5}+1\right)\frac{1}{A_2(f)}+\left(\frac{Z_5}{Z_4}+1\right)\frac{1}{A_1(f)}+1
+  }\right)
+\]
+donde \(A_1(f)\) y \(A_2(f)\) son las amplificaciones de los operacionales. Si \(A_1(f)\) y \(A_2(f)\) tienden a infinito, como en el caso ideal, se recupera la expresión \eqref{eq_gic}.
+
+Si se realiza el gráfico de ambos casos (el ideal y el real), se obtiene la figura \ref{fig_gic_real_vs_ideal}.
+\begin{figure}[!ht]
+  \centering
+  \begin{subfigure}[b]{0.45\textwidth}
+    \centering
+    \begin{tikzpicture}
+      \draw[gray,->] (0,0) -- (4.5,0);
+      \draw[gray,->] (0,0) -- (0,5.5);
+      \foreach \i/\x in {0/10,1/100,2/10^3,3/10^4,4/10^5} {
+        \draw[gray] (\i,.1) -- (\i,-.1) node[below,font=\small] {$\x$};
+      }
+      \foreach \i/\y in {0/10^3,1/10^4,2/10^5,3/10^6,4/10^7,5/10^8} {
+        \draw[gray] (.1,\i) -- (-.1,\i) node[left,font=\small] {$\y$};
+      }
+      \draw[thick,red] (0,0.8) -- (54.5:4) 
+        to[out=54.5,in=90] +(.5,2)
+        to[out=270,in=150] (4,3);
+      \draw[thick,blue,dashed] (0,0.8) -- (4,5);
+    \end{tikzpicture}
+    \caption{Comportamiento del GIC real contra ideal.}
+    \label{fig_gic_real_vs_ideal}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[b]{0.45\textwidth}
+    \centering
+    \begin{tikzpicture}
+      \draw[gray,->] (0,0) -- (4.5,0);
+      \draw[gray,->] (0,0) -- (0,5.5);
+      \foreach \i/\x in {0/10,1/100,2/10^3,3/10^4,4/10^5} {
+        \draw[gray] (\i,.1) -- (\i,-.1) node[below,font=\small] {$\x$};
+      }
+      \foreach \i/\y in {0/10^3,1/10^4,2/10^5,3/10^6,4/10^7,5/10^8} {
+        \draw[gray] (.1,\i) -- (-.1,\i) node[left,font=\small] {$\y$};
+      }
+      \draw[thick,red] (0,0.8) -- (56.6:3) 
+        to[out=54.5,in=90] +(.5,2)
+        to[out=270,in=150] (4,2.3);
+      \draw[thick,blue] (0,0.8) -- (55.3:3.5) 
+        to[out=54.5,in=90] +(.5,2)
+        to[out=270,in=150] (4,2.6);
+      \draw[thick] (0,0.8) -- (54.5:4) 
+        to[out=54.5,in=90] +(.5,2)
+        to[out=270,in=150] (4,3);
+    \end{tikzpicture}
+    \caption{Comparación de distintos operacionales en el mismo GIC.}
+    \label{fig_comparacion_gbw}
+  \end{subfigure}
+  \caption{}
+\end{figure}
+Vemos que el modelo ideal aproxima de forma adecuada al modelo real hasta cierto punto, donde se genera una marcada divergencia. El pico de impedancia depende de los valores de \(R\) y \(C\), y del parámetro GBW\footnote{El GBW (producto ganancia-ancho de banda) de un amplificador operacional es una constante que relaciona la ganancia en lazo abierto con el ancho de banda utilizable cuando el op-amp se usa en configuración con realimentación.} del operacional.
+
+Si se realiza una gráfica de la impedancia del mismo GIC con distintos operacionales, se obtiene lo que se muestra en la figura \ref{fig_comparacion_gbw}, donde se puede observar que cuanto mayor sea el GBW del operacional, mayor será el rango de frecuencias para el cual el GIC se comporta como su modelo ideal.
+
+\section{Ejercicios para el lector}
+
+\subsection{Preguntas teóricas}
+
+\begin{enumerate}
+  \item ¿Qué es un circuito GIC?
+  \item ¿Para qué se usa este circuito?
+  \item ¿Qué ventaja da usar un GIC sobre una inductancia?
+  \item Y ¿Qué desventajas presenta en la realidad?
+  \item ¿Cuántos amplificadores operacionales necesito para armar un GIC?
+  \item ¿Por qué se usa \(Z_4=1/(sC)\)?
+\end{enumerate}
