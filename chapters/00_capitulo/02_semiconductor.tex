@@ -1,0 +1,224 @@
+\section{Semiconductores}
+
+Imaginemos a Luis, un estudiante que acaba de dominar los teoremas de Thévenin y Norton. Entusiasmado, Luis se da cuenta de que puede simplificar cualquier red, por más compleja que sea, en una simple ``caja negra'' lineal. Sin embargo, al intentar diseñar un circuito práctico —por ejemplo, un cargador para una batería— Luis se topa con un muro: necesita que la corriente fluya en una sola dirección. Si la batería intenta devolver la corriente hacia la fuente, el circuito debe bloquearla.
+
+Luis busca en su taller. Conecta diferentes resistores en serie y en paralelo, pero rápidamente recuerda la regla de oro que acaba de aprender: una resistencia es un componente lineal; su comportamiento no varía cuando cambia la tensión, y mucho menos distingue la dirección en la que fluye la corriente. La linealidad, que hasta ahora había sido su mayor aliada para simplificar cálculos, se convierte de repente en su principal obstáculo. Luis descubre que para rectificar señales, impedir el retroceso de corriente o amplificar voltajes, necesita romper las reglas de la linealidad.
+
+Esta necesidad obliga a Luis a abandonar temporalmente los predecibles componentes óhmicos y adentrarse en un mundo nuevo: la física de los semiconductores. Allí encuentra la pieza que le faltaba: el diodo. A diferencia de una resistencia, el diodo toma ``decisiones'' basadas en la tensión aplicada, permitiendo el paso de la corriente en un sentido y bloqueándolo en el opuesto.
+
+Irónicamente, el viaje de Luis por el territorio no lineal de los semiconductores tiene un destino familiar. Al dominar el comportamiento de diodos y transistores, Luis será capaz de diseñar circuitos increíblemente complejos, como los amplificadores operacionales. Pero, para poder interactuar con esos amplificadores y conectarlos a otros sistemas en el mundo real, Luis cerrará el círculo abstrayendo toda esa complejidad interna y modelándolos, una vez más, con los equivalentes de Thévenin y Norton que aprendió al principio.
+
+\subsection{Conductores}
+
+Para entender cómo construir esa nueva ``caja negra'' que le permita controlar el flujo de la corriente, Luis decide que primero debe investigar a fondo por qué los materiales que ya conoce se comportan como lo hacen. Observa los cables que conectan su prototipo; están hechos de cobre, un material que permite el paso de la corriente en ambas direcciones sin oponer casi resistencia. ``¿Qué hace que el cobre sea un conductor tan bueno y, a la vez, tan inútil para mi problema de rectificación?'', se pregunta. Para encontrar la respuesta, Luis debe hacer un viaje mental a nivel microscópico.
+
+\paragraph{El átomo de cobre y sus orbitales}
+Al visualizar un átomo de cobre en estado neutro, Luis observa su núcleo compuesto por 29 protones (cargas positivas). A su alrededor, de forma similar a como los planetas orbitan alrededor del Sol\footnote{El modelo orbital planetario es una simplificación amplia del modelo atómico actual, pero suficiente para comprender el motivo de materiales conductores y aislantes.}, giran 29 electrones (cargas negativas). Luis nota que estos electrones se organizan en órbitas muy estructuradas, denominadas orbitales o capas: 2 electrones en el primero, 8 en el segundo, 18 en el tercero y un único, y solitario, electrón en el orbital más externo.
+
+\paragraph{La ``parte interna'' y el orbital de valencia}
+Analizando esta estructura, Luis llega a una conclusión clave para la electrónica: los orbitales internos son sumamente estables. El único que realmente importa para definir las propiedades eléctricas del material es ese último nivel, conocido como orbital de valencia.
+
+Para simplificar su análisis, Luis decide agrupar mentalmente el núcleo (+29) y los 28 electrones internos (--28). A este conjunto lo define como la ``parte interna'' del átomo. Haciendo un cálculo rápido, se da cuenta de que toda esta parte interna tiene una carga neta de apenas +1.
+
+\paragraph{El electrón libre}
+Con esta nueva perspectiva, el panorama se vuelve clarísimo. Ese único electrón de valencia, situado en la periferia del átomo de cobre, siente una atracción neta de apenas +1 hacia la parte interna. Al ser un enlace tan débil, Luis deduce que una fuerza externa mínima —incluso la tensión más pequeña de una pila— es capaz de arrancar a este electrón de su órbita con gran facilidad.
+
+Es por esta razón que a este electrón exterior se lo denomina electrón libre. Acaba de descubrir el secreto detrás de los grandes conductores como la plata, el oro y el cobre: sus electrones libres pueden moverse de un átomo al siguiente con casi nulo esfuerzo.
+
+Sin embargo, mientras Luis observa el comportamiento de estos electrones saltando libremente en su cable de cobre, comprende su frustración inicial. Un material donde los electrones fluyen con tanta libertad jamás le servirá para bloquear o controlar la corriente de forma selectiva. Necesita encontrar un punto medio.
+
+\subsection{Los Semiconductores}
+
+Siguiendo con su razonamiento, Luis piensa en el extremo opuesto a su cable de cobre: los aislantes. Si los mejores conductores tienen un solo electrón de valencia que se escapa fácilmente, los mejores aislantes (que no dejan pasar la corriente bajo ninguna circunstancia normal) tienen su órbita exterior firmemente completa con ocho electrones.
+
+``Si uno es demasiado libre y ocho es demasiado rígido'', deduce Luis, ``¿qué pasaría si busco un material que esté exactamente en el medio?''. Al buscar elementos con exactamente cuatro electrones de valencia, Luis acaba de entrar al mundo de los semiconductores, materiales con propiedades eléctricas que se sitúan en un punto de equilibrio perfecto entre un conductor y un aislante.
+
+\paragraph{El ascenso y la caída del germanio}
+Investigando en los registros históricos de la ingeniería electrónica, Luis encuentra al primer gran candidato: el germanio. Tal y como esperaba, el germanio tiene cuatro electrones en su orbital de valencia y fue el material pionero, el único adecuado hace años para fabricar los primeros dispositivos semiconductores.
+
+Sin embargo, al revisar los viejos diseños, Luis nota una falla estructural grave. Estos primeros dispositivos presentaban una excesiva corriente inversa (una fuga de energía en la dirección equivocada). Era un problema al que los ingenieros de la época no pudieron darle una solución definitiva, lo que terminó condenando al germanio a la obsolescencia en la inmensa mayoría de las aplicaciones electrónicas.
+
+\paragraph{El rey de la electrónica: El silicio}
+Luis necesita una alternativa mejor y descubre que la solución es, literalmente, uno de los materiales más comunes del planeta. Encuentra el silicio, el elemento más abundante en la Tierra después del oxígeno. Lee que, en los inicios de la electrónica, existían ciertos problemas de purificación que impedían su uso. Pero una vez que la industria logró aislarlo correctamente, sus ventajas lo convirtieron de inmediato en el semiconductor definitivo. Luis se maravilla al darse cuenta de que sin este material, la electrónica moderna, las comunicaciones y la informática que utiliza a diario serían simplemente imposibles.
+
+Para entender el secreto del silicio, Luis vuelve a aplicar su ejercicio mental de visualización atómica. Observa un átomo de silicio aislado: contiene 14 protones en su núcleo y 14 electrones en órbita. En el primer orbital giran 2 electrones, y en el segundo, 8. Tal como exige la regla de los semiconductores, los 4 electrones restantes ocupan el orbital de valencia.
+
+Luis calcula entonces la ``parte interna'' del silicio. Suma los 14 protones del núcleo y los 10 electrones de los dos primeros orbitales, lo que resulta en una carga neta de +4. Atrapados por esta fuerza central, esos 4 electrones de valencia le confirman a Luis que ha encontrado la materia prima perfecta. Ya tiene el material base; el siguiente paso será descubrir cómo manipularlo para lograr que la corriente fluya en una sola dirección.
+
+Ahora que Luis ha seleccionado el silicio como su material ideal gracias a sus 4 electrones de valencia, se da cuenta de que en el mundo real no trabajará con átomos aislados. Al observar un trozo de silicio sólido, decide investigar cómo interactúan estos átomos al agruparse.
+
+\paragraph{Cristales y enlaces covalentes}
+Luis imagina los átomos uniéndose. Descubre que no se amontonan al azar, sino que forman un patrón geométrico tridimensional muy ordenado denominado cristal. Cada átomo de silicio en el interior del cristal se posiciona en el centro de otros cuatro átomos vecinos.
+
+Para alcanzar la estabilidad, cada átomo central comparte un electrón de valencia con cada uno de sus cuatro vecinos. Luis recuerda que la ``parte interna'' de cada átomo de silicio tiene una carga de +4. Se imagina a dos de estas partes internas vecinas atrayendo al par de electrones compartidos que hay entre ellas con fuerzas iguales y opuestas. Luis acaba de visualizar un enlace covalente, el pegamento que mantiene unido al cristal y le da su solidez.
+
+\paragraph{La regla del ocho: Saturación de valencia}
+Al compartir electrones con sus cuatro vecinos, el átomo central que originalmente tenía 4 electrones en su órbita externa ahora dispone de 8. Luis anota en sus apuntes una regla empírica fundamental: la saturación de valencia (\(n=8\)).
+
+Lee que, en la física, estos ocho electrones proporcionan una estabilidad química absoluta. Aunque existen complejas ecuaciones para justificarlo, nadie sabe exactamente por qué el número ocho es tan especial; es una ley de la naturaleza tan inquebrantable como la gravedad. El orbital no admite ni un solo electrón más. Como resultado de esta saturación, los electrones quedan fuertemente ligados a sus respectivos átomos.
+
+De pronto, Luis siente que ha vuelto al punto de partida. Si todos los electrones están fuertemente ligados en sus enlaces covalentes, significa que no hay electrones libres. Concluye con frustración que, a temperatura ambiente (unos \qty{25}{\degreeCelsius}), su perfecto cristal de silicio es, a todos los efectos prácticos, un aislante casi perfecto.
+
+\paragraph{El dopaje}
+En medio de su frustración, Luis es interrumpido por Carl, su profesor de electrónica. Al ver a Luis sumergido en complejos libros de física de estado sólido y cristalografía, Carl se ríe, toma un borrador y limpia la mitad de la pizarra. 
+
+``Los semiconductores son un mundo en la física teórica. Si no quieres abrumarte durante el aprendizaje, es mejor que avances de a poco'', le dice Carl. ``No necesitas analizar el movimiento caótico de cada electrón. En la industria, nosotros forzamos el desequilibrio a nuestro favor''. Carl le explica el concepto de \emph{dopaje}: la técnica de introducir intencionalmente impurezas químicas en el cristal de silicio puro para alterar drásticamente su conductividad.
+
+\paragraph{Material Tipo N y Tipo P}
+Carl dibuja dos bloques en la pizarra y le resume el concepto en dos variantes:
+\begin{itemize}
+    \item \textbf{Semiconductor Tipo N (Negativo):} Si al silicio le agregamos átomos con 5 electrones de valencia (como el fósforo), cuatro de ellos forman enlaces covalentes con el silicio, pero sobra uno. Ese electrón extra queda libre y listo para moverse por el material, es decir, es un buen conductor eléctrico.
+    \item \textbf{Semiconductor Tipo P (Positivo):} Si le agregamos átomos con 3 electrones de valencia (como el boro), a la estructura de cristal le faltará un electrón para completar los ocho. Este espacio vacío, llamado \emph{hueco}, actúa físicamente como una carga positiva muy fuerte que atrae a cualquier electrón cercano.
+\end{itemize}
+
+Evidentemente el estudio de la física teórica detrás del funcionamiento de los materiales semiconductores es importante para comprender en totalidad el funcionamiento de los dispositivos electrónicos. Sin embargo, a fines del curso de electrónica analógica es importante entender conceptualmente el comportamiento. La física que justifica ese comportamiento se reserva para el curso de dispositivos electrónicos.
+
+\subsection{La Unión PN: El Diodo}
+
+``Por separado, estos bloques no son mucho mejores que una resistencia normal'', continúa Carl, ``pero aquí está el truco que buscabas para tu cargador de baterías''. Carl junta los dos bloques en la pizarra, formando una \emph{unión PN}, también denominado juntura. 
+
+Al unirlos, algunos de los electrones libres del lado N cruzan la frontera para llenar los huecos del lado P. Esto crea una pequeña zona en el medio que se vacía de cargas libres, conocida como la \emph{zona de deplexión}. Esta zona actúa como un muro eléctrico, una \emph{barrera de potencial} que, en el caso del silicio, equivale a unos \qty{0.7}{\volt}. Acaban de construir un diodo.
+\begin{figure}[!ht]
+  \centering
+  \input{chapters/00_capitulo/media/curva_caracteristica_diodo.tex}
+  \caption{Curva característica I-V de un diodo de silicio.}
+  \label{fig_curva_del_diodo}
+\end{figure}
+
+Una resistencia ordinaria es un dispositivo lineal porque la gráfica de su corriente en función de su tensión es una línea recta. Un diodo es diferente, es un dispositivo no lineal porque la gráfica de la corriente en función de la tensión no es una línea recta.
+
+\paragraph{La válvula de un solo sentido}
+Para cerrar la lección, Carl le dibuja a Luis una gráfica de corriente en función del voltaje (la curva característica representada en la figura \ref{fig_curva_del_diodo}) y le explica las dos reglas de oro que gobernarán el diodo a nivel macroscópico:
+\begin{enumerate}
+    \item \textbf{Polarización Directa (Conducción):} Si aplicas un voltaje positivo al lado P (y negativo al N) que supere esa barrera de \qty{0.7}{\volt}, el muro de deplexión colapsa. Los electrones cruzan libremente y el diodo conduce la corriente como si fuera un interruptor cerrado.
+    \item \textbf{Polarización Inversa (Bloqueo):} Si inviertes la polaridad de la fuente, atrayendo las cargas lejos de la unión, el muro se ensancha. El diodo bloquea la corriente casi por completo, actuando como un interruptor abierto.
+\end{enumerate}
+Carl continúa explicando cómo se ve un diodo en un esquema de circuito; ``En un diodo, el lado p se llama ánodo y el lado n es el cátodo''. 
+
+En el diagrama topológico o esquema de un circuito se utiliza el símbolo de la figura \ref{fig_diodo} para el diodo. Luego, Carl señala la figura \ref{fig_ejemplo_de_circuito_con_diodo} y dice ``En este circuito, el diodo está polarizado en directa. ¿Te animas a decirme cómo lo sabemos?''. 
+
+``Porque el terminal positivo de la batería está conectado al lado p del diodo a través de una resistencia, y el terminal negativo está conectado al lado n'', responde Luis. Observe que con esta conexión, el circuito está tratando de empujar huecos y electrones libres hacia la unión, lo que hace que se comporte como un conductor.
+\begin{figure}[!ht]
+  \centering
+  \begin{subfigure}[t]{0.42\textwidth}
+    \begin{circuitikz}%[scale=0.7,transform shape]
+      \centering
+      \draw (0,-1) 
+        to[battery,invert,l=\(V_S\),name=vs] (0,1) 
+        to[R,l=R] (3,1) 
+        to[diode,name=d,l=\(V_D\)] (3,-1) 
+        to[short] (0,-1);
+      \node[above left] at (vs.west) {\(+\)};
+      \node[below left] at (vs.east) {\(-\)};
+      \node[above] at (d.north west) {\(+\)};
+      \node[below] at (d.north east) {\(-\)};
+    \end{circuitikz}
+    \caption{Ejemplo de circuito con diodo.}
+    \label{fig_ejemplo_de_circuito_con_diodo}
+  \end{subfigure}
+  \hspace{1cm}
+  \begin{subfigure}[t]{0.48\textwidth}
+    \centering
+    \begin{circuitikz}
+      \draw (0,0) to[diode,name=d] (2,0);
+      \node[left=0.6 ,align=center] at (d.north west) {Ánodo \\ (\(+\))};
+      \node[right=0.6,align=center] at (d.north east) {Cátodo \\ (\(-\))};
+      \node[below] at (d.south) {Diodo};
+    \end{circuitikz}
+    \caption{Representación esquemática del diodo.}
+    \label{fig_diodo}
+  \end{subfigure}
+  \caption{}
+\end{figure}
+
+Carl explica a Luis cómo es el comportamiento y la resistencia interna del diodo cuando se polariza de forma directa; ``Para tensiones mayores que la tensión umbral (o barrera de potencial, es decir \(\approx\qty{0.7}{\volt}\)), la corriente del diodo crece rápidamente, lo que quiere decir que aumentos pequeños en la tensión del diodo originarán grandes incrementos en su corriente'', tal y como se visualiza en la figura \ref{fig_curva_del_diodo}. Luis, siguiendo el curso deductivo que realizó al comienzo intenta explicar la causa de este fenómeno; ``La causa es la siguiente: después de superada la barrera de potencial, lo único que se opone a la corriente es la resistencia óhmica de las zonas p y n. En otras palabras, si las zonas p y n fueran dos piezas separadas de semiconductor, cada una tendría una resistencia que se podría medir con un óhmetro, igual que una resistencia ordinaria''. A lo que Carl le responde, ``Justamente, la suma de estas resistencias óhmicas se denomina resistencia interna del diodo, y se define de la siguiente manera'' y procede a escribir en la zona izquierda inferior de la pizarra la ecuación 
+\[
+  R_B=R_N+R_P
+\]
+``La misteriosa letra B significa \emph{Bulk}, y es una sigla que se suele emplear en la bibliografía electrónica. Esto en español es básicamente la resistencia interna, o la resistencia del volumen. Por eso la curva no es perfectamente vertical; esa pequeña \(R_B\) es la que inclina levemente la gráfica y la que hará que tu diodo se caliente si le exiges demasiada corriente'' aclara Carl al terminar de anotar.
+
+Al escuchar esto, Luis se rasca la cabeza, mira sus apuntes y pregunta: ``Entonces ¿Cómo se puede plantear un circuito con un diodo y realizar los cálculos sin entrar en física de semiconductores?''.
+
+Carl nota el interés de Luis por conocer el verdadero comportamiento para poder diseñar sus circuitos usando diodos, entonces le proporciona un método práctico para proseguir ``Es una duda inteligente. Mas no te preocupes, no debes entrar en conceptos físicos detallados para poder usar un diodo en tus circuitos. Para tus cálculos puedes optar por dos aproximaciones, veamos en que consiste cada una''. Carl, procede a borrar nuevamente el lado derecho de la pizarra y anota dos títulos, uno en la mitad superior que dice \emph{Aproximación ideal} y otro en la mitad inferior \emph{Segunda aproximación} y procede a realizar un gráfico correspondiente a cada aproximación.
+
+\begin{figure}[!ht]
+  \centering
+  \begin{subfigure}[t]{0.45\textwidth}
+    \centering
+    \begin{tikzpicture}[>=stealth]
+      \draw[->](-1.5,0)--(1.5,0) node[right]{V};
+      \draw[->](0,0)--(0,2) node[right]{I};
+      \draw[red,thick] (-1.3,0)--(0,0)node[below,font=\footnotesize]{\qty{0}{\volt}} -- (0,1.8);
+    \end{tikzpicture}
+    \caption{Aproximación ideal.}
+    \label{fig_aproximación_de_diodo_ideal}
+  \end{subfigure}
+  \hspace{1cm}
+  \begin{subfigure}[t]{0.45\textwidth}
+    \centering
+    \begin{tikzpicture}[>=stealth]
+      \draw[->](-1,0)--(3,0) node[right]{V};
+      \draw[->](0,0)--(0,2) node[right]{I};
+      \draw[red,thick] (-0.8,0)--(1,0)node[below,font=\footnotesize]{\qty{0.7}{\volt}} -- (1,2);
+    \end{tikzpicture}
+    \caption{Segunda aproximación.}
+    \label{fig_segunda_aproximación_de_diodo}
+  \end{subfigure}
+  \caption{}
+\end{figure}
+
+\paragraph{Aproximación ideal} (Figura \ref{fig_aproximación_de_diodo_ideal}) ``Primero, si no requieres de tolerancias exactas y pretendes usarlo para impedir o permitir el flujo de pequeñas corrientes, consideras el diodo como si fuese un componente ideal, un interruptor: estará abierto en polarización inversa y cerrado en directa'' sugiere Carl. Luis analiza el gráfico y piensa: en este caso la curva del diodo es una vertical cuando se polariza en forma directa, y una horizontal cuando se polariza en inversa. El único componente que se comporta de esta manera es un interruptor físico. Un diodo real busca parecerse, pero es imposible fabricar diodos ideales.
+
+``¿Y si busco utilizarlo en circuitos donde la caída de potencial o la corriente del diodo influyen?'', pregunta Luis. ``Para eso veremos la segunda aproximación'' dice Carl.
+
+\paragraph{Segunda aproximación} (Figura \ref{fig_segunda_aproximación_de_diodo}) Carl aborda la segunda aproximación respondiendo primero con respecto a la corriente o potencia que puede disipar un diodo; ``La corriente que puede manejar un diodo siempre estará disponible en la hoja de datos. Es decir, es un factor que depende del diodo que uses. Sin embargo cuando la caída de potencial es importante, esta aproximación es en la mayoría de los casos la más práctica''. 
+
+Al ver esto Luis se sorprende. De repente lo que ha aprendido sobre equivalente de Thevenin puede servirle para ``emular'' este diodo usando componentes que ya conoce: interruptores y fuentes de continua. Al comentar este pensamiento Carl complementa la idea representando en la pizarra los esquemas de la figura \ref{fig_segunda_aproximación_de_diodo_equivalente}.
+\begin{figure}[!ht]
+  \centering
+  \begin{circuitikz}
+    \draw (-2,2) node[left]{A} to[diode,*-*] (2,2) node[right]{B};
+    \draw (-2,0) node[left]{A} to[cute open switch,*-] (0,0) to[battery,l={\qty{0.7}{\volt}},-*] (2,0) node[right]{B};
+    \draw (-2,-2) node[left]{A} to[cute closed switch,*-] (0,-2) to[battery,l={\qty{0.7}{\volt}},-*] (2,-2) node[right]{B};
+  \end{circuitikz}
+  \caption{Equivalente de Thevenin del diodo.}
+  \label{fig_segunda_aproximación_de_diodo_equivalente}
+\end{figure}
+
+\paragraph{Tercera aproximación} Y si requiere aún una mejor aproximación puede usar una ``segunda aproximación mejorada'' resaltó Carl. Esta mejora consiste en considerar la resistencia interna del diodo, que aunque es pequeña permite tener un comportamiento más cercano al real. ``¿Cómo se hace esto?'' Preguntó Luis.
+
+``Es muy simple, agregue una resistencia en serie al circuito de la figura \ref{fig_segunda_aproximación_de_diodo_equivalente} que sea equivalente a la resistencia \(R_B\) del diodo cuando la polarización es directa'', y Carl modificó el esquema proporcionando una tercera aproximación como se muestra en la figura \ref{fig_tercer_aproximación_de_diodo_equivalente}.
+\begin{figure}[!ht]
+  \centering
+  \begin{circuitikz}
+    \draw (-3,2) node[left]{A} to[diode,*-*] (3,2) node[right]{B};
+    \draw (-3,0) node[left]{A} to[cute open switch,*-] (-1,0) to[R,l={\(R_B\)}] (1,0) to[battery,l={\qty{0.7}{\volt}},-*] (3,0) node[right]{B};
+    \draw (-3,-2) node[left]{A} to[cute closed switch,*-] (-1,-2) to[R,l={\(R_B\)}] (1,-2) to[battery,l={\qty{0.7}{\volt}},-*] (3,-2) node[right]{B};
+  \end{circuitikz}
+  \caption{Equivalente de Thevenin del diodo.}
+  \label{fig_tercer_aproximación_de_diodo_equivalente}
+\end{figure}
+
+Con estas herramientas Luis será capaz de enfrentarse a la gran mayoría de circuitos sin problemas, pero para consolidar los conceptos deberá responder algunas preguntas.
+
+\section{Ejercicios para el lector}
+
+En todos los capítulos encontrará una sección con algunas preguntas de concepto. Es importante considerar responderlas sin volver a leer el texto. Usted debe responder con lo que se acuerda, y si no recuerda deje en blanco. Una vez haya terminado de responder cada pregunta, puede releer los conceptos que no le quedaron claros y así notar en qué aspectos de la lectura debe profundizar para el próximo capítulo. 
+
+\subsection{Preguntas teóricas}
+
+\begin{enumerate}
+  \item ¿Para qué sirve un circuito equivalente de Thevenin?
+  \item ¿Cuál es el procedimiento para obtener el circuito equivalente de Thevenin?
+  \item ¿Qué diferencia hay entre el equivalente de Thevenin y el equivalente de Norton?
+  \item ¿Qué características definen a un conductor?
+  \item ¿Qué tiene un semiconductor para ser denominado semiconductor?
+  \item ¿Qué es el dopaje?
+  \item ¿Qué es un semiconductor tipo P y un semiconductor tipo N?
+  \item ¿A que se le llama unión o juntura PN?
+  \item ¿Qué propiedades tiene una juntura PN?
+  \item ¿Por qué un diodo no es un componente lineal?
+  \item ¿Qué formas hay de conectar un diodo?
+  \item ¿Qué tensión se necesita para que el diodo se comporte como conductor en polarización directa?
+  \item Cuando analiza circuitos ¿Qué aproximaciones puede considerar para simplificar los cálculos?
+\end{enumerate}

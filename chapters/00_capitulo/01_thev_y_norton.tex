@@ -1,0 +1,147 @@
+\section{Equivalente de Thevenin}
+
+Un circuito, tal vez desconocido, como el que se muestra en la figura \ref{sfig_caja_negra_fuente} puede representarse con un circuito equivalente de Thevenin. Usualmente se denomina al circuito desconocido como ``caja negra''. La caja negra puede contener cualquier circuito formado por fuentes de continua y resistencias lineales. Una resistencia lineal no varía cuando aumenta la tensión. El circuito equivalente de Thevenin permite, independientemente de lo complejo que sea el circuito en el interior de la caja negra, reemplazarlo por su equivalente de Thevenin formado por una fuente de Thevenin (\(V_\text{th}\)) y una resistencia de Thevenin (\(R_\text{th}\)), como muestra la figura \ref{sfig_eq_thevenin}.
+
+\begin{figure}[!ht]
+  \centering
+  \begin{subfigure}[b]{0.45\textwidth}
+    \centering
+    \begin{circuitikz} 
+      \draw[dashed, fill=gray!10] (0,-0.5) rectangle (3,2.5);
+      \node at (1.5,1) {\textbf{Caja Negra}};
+      
+      \draw (3,2) to[short, -*] (4,2) node[above](A) {A};
+      \draw (3,0) to[short, -*] (4,0) node[below](B) {B};
+
+      \draw[gray] (A) to[R=\(R_L\)] (B);
+    \end{circuitikz}
+    \caption{Circuito de una fuente de tensión desconocida.}
+    \label{sfig_caja_negra_fuente}
+  \end{subfigure}
+  \hspace{5mm}
+  \begin{subfigure}[b]{0.45\textwidth}
+    \centering
+    \begin{circuitikz}
+      \draw[dashed, fill=gray!10] (-1.3,-0.5) rectangle (1.7,2.5);
+      \draw (0,0) to[battery,l=\(V_\text{th}\), invert] (0,2)
+            to[R,l_=\(R_\text{th}\)] (2,2) to[short, -*] (2.5,2) node[above](A) {A};
+      \draw (0,0) to[short, -*] (2.5,0) node[below](B) {B};
+      \draw[gray] (A) to[R=\(R_L\)] (B);
+    \end{circuitikz}
+    \caption{Equivalente de Thevenin del circuito \ref{sfig_caja_negra_fuente}.}
+    \label{sfig_eq_thevenin}
+  \end{subfigure}
+  \caption{Equivalente de Thevenin de un circuito}
+\end{figure}
+
+Para obtener el equivalente de Thevenin de un circuito conocido, se debe encontrar la tensión de la fuente de Thevenin y la resistencia de Thevenin.
+
+La tensión de la fuente de Thevenin se define como la tensión que aparece entre los terminales de carga (A y B) cuando la resistencia de carga está en circuito abierto (\(R_L\to\infty\)).
+\[
+  \text{Tensión de Thevenin: } V_\text{th}=V_\text{OC} \quad \text{(OC: circuito abierto)}
+\]
+
+La resistencia de Thevenin se define como la resistencia que mide un óhmetro en los terminales A y B cuando todas las fuentes se anulan y la resistencia de carga \(R_L\) está en circuito abierto.
+\[
+  \text{Resistencia de Thevenin: } R_\text{th}=R_\text{OC}
+\]
+Para anular una fuente de tensión, se reemplaza por un corto circuito. Para anular una fuente de corriente se reemplaza por un circuito abierto.
+
+\begin{example}
+  Encuentre el equivalente de Thevenin del circuito de la figura \ref{fig_ejemplo_thevenin}.
+  \begin{figure}[!ht]
+    \centering
+    \begin{circuitikz}[scale=0.7]
+      \coordinate[label=right:A] (A) at (6,3);
+      \coordinate[label=right:B] (B) at (6,0);
+      
+      \draw (A) to[R,l_={\footnotesize\(R_3=\qty{4}{\kilo\ohm}\)},*-] (3,3) node[above]{C} to[R,l_={\footnotesize\(R_1=\qty{6}{\kilo\ohm}\)}] (0,3)
+        to[battery,l_=\qty{72}{\volt}] (0,0) to[short,-*] (B);
+      \draw (3,3) to[R,l={\footnotesize\(R_2=\qty{3}{\kilo\ohm}\)},*-*] (3,0);
+
+      \draw[gray] (A) to[R=\(R_L\)] (B);
+    \end{circuitikz}
+    \caption{}
+    \label{fig_ejemplo_thevenin}
+  \end{figure}
+
+  Véase que analizar este circuito puede resultar tedioso a simple vista, ya que se debe de convertir una estrella conformada por las resistencias que se unen en el nodo C a triangulo, así poder calcular las corrientes y caídas de tensión en cada resistor. Sin embargo Thevenin sugiere considerar \(R_L\to\infty\) y luego enmudecer la fuente de \qty{72}{\volt}. Entonces, primero se considera \(R_L\to\infty\) y se calcula la tensión en circuito abierto. 
+
+  En ese caso, la resistencia \(R_3\) queda desconectada del circuito y la tensión que se tendrá entre C y B será la caída de tensión de las resistencias \(R_1\) y \(R_2\). Entonces:
+  \begin{gather*}
+    \qty{72}{\volt}=I (\qty{6}{\kilo\ohm}+\qty{3}{\kilo\ohm}) \\ 
+    I = \frac{\qty{72}{\volt}}{\qty{9}{\kilo\ohm}} = \qty{8}{\micro\ampere} \\ 
+    V_\text{th}=\qty{8}{\micro\ampere}\cdot\qty{4}{\kilo\ohm}=\boxed{\qty{24}{\volt}}
+  \end{gather*}
+
+  Por último, enmudecemos la fuente. Con esta aproximación, el circuito que resulta es el que se muestra en la figura \ref{fig_ejemplo_thevenin_enmudecido}.
+  \begin{figure}[!ht]
+    \centering
+    \begin{circuitikz}[scale=0.7]
+      \coordinate[label=right:A] (A) at (6,3);
+      \coordinate[label=right:B] (B) at (6,0);
+      
+      \draw (A) to[R,l_=\qty{4}{\kilo\ohm},*-] (3,3) node[above]{C} to[R,l_=\qty{6}{\kilo\ohm}] (0,3)
+        to[short] (0,0) to[short,-*] (B);
+      \draw (3,3) to[R=\qty{3}{\kilo\ohm},*-*] (3,0);
+
+    \end{circuitikz}
+    \caption{}
+    \label{fig_ejemplo_thevenin_enmudecido}
+  \end{figure}
+
+  De esta manera es secillo observar que se tienen dos resistencias en paralelo \(R_1=\qty{6}{\kilo\ohm}\) y \(R_2=\qty{3}{\kilo\ohm}\). Entonces, calcule la resistencia equivalente
+  \[
+    R_{12}=\frac{6\text{k}3\text{k}}{6\text{k}+3\text{k}} \unit{\ohm} = \qty{2}{\kilo\ohm}
+  \]
+  Donde se observa que esta última resistencia está en serie con la resistencia \(R_3=\qty{4}{\kilo\ohm}\). Resultando entonces:
+  \[
+    R_\text{th}=\qty{2}{\kilo\ohm}+\qty{4}{\kilo\ohm}=\boxed{\qty{6}{\kilo\ohm}}
+  \]
+  \begin{figure}[!ht]
+    \centering
+    \begin{circuitikz}[scale=0.7]
+      \coordinate[label=right:A] (A) at (6,3);
+      \coordinate[label=right:B] (B) at (6,0);
+      
+      \draw (A) to[R,l_={\footnotesize\(R_\text{th}=\qty{6}{\kilo\ohm}\)},*-] (0,3)
+        to[battery,l_=\qty{24}{\volt}] (0,0) to[short,-*] (B);
+
+      \draw[gray] (A) to[R=\(R_L\)] (B);
+    \end{circuitikz}
+    \caption{Circuito equivalente de Thevenin.}
+    \label{fig_ejemplo_thevenin_resuelto}
+  \end{figure}
+
+  Entonces el circuito equivalente de Thevenin es como el representado el la figura \ref{fig_ejemplo_thevenin_resuelto}.
+\end{example}
+
+\subsection{Equivalente de Norton}
+
+Tanto el teorema de Thevenin como el teorema de Norton nacieron de la necesidad práctica de simplificar el análisis de complejas redes de telecomunicaciones (telégrafos y teléfonos), pero tienen historias muy particulares.
+
+El teorema de Thévenin lleva el nombre de \emph{Léon Charles Thévenin} (1857 -- 1926), un destacado ingeniero de telégrafos francés. En 1883, publicó su famoso teorema tras analizar exhaustivamente las leyes de Kirchhoff para hacer más eficiente el mantenimiento y diseño de las líneas telegráficas de Francia.
+
+Sin embargo, hay un giro histórico interesante: Thévenin no fue el primero en descubrirlo. El principio fue formulado 30 años antes, en 1853, por el legendario físico y médico alemán Hermann von Helmholtz. Helmholtz lo desarrolló mientras estudiaba la electricidad en los tejidos animales. Desafortunadamente, como lo publicó en un contexto de bioelectricidad, la naciente comunidad de ingenieros eléctricos no se enteró. Cuando Thévenin lo redescubrió y lo aplicó directamente a la ingeniería de redes, el nombre quedó sellado en los libros de texto.
+
+El teorema de Norton fue formulado varias décadas después, en 1926, por Edward Lawry Norton (1898 -- 1983), un ingeniero eléctrico y científico estadounidense.
+
+Norton desarrolló toda su carrera en los prestigiosos Bell Labs (Laboratorios Bell). A diferencia de Thévenin, que pensaba en términos de caída de voltaje en largas líneas de telégrafo, Norton trabajaba en el diseño de filtros acústicos, redes telefónicas y grabaciones de sonido. Para los tipos de instrumentos (como relés y tubos de vacío) y análisis que realizaban en Bell Labs, trabajar con corrientes resultaba mucho más práctico que trabajar con voltajes.
+
+En 1926, plasmó su teorema en un memorando técnico interno sobre el diseño de redes, demostrando que usar una fuente de corriente en paralelo era matemáticamente igual de válido y muchas veces más conveniente.
+
+Dado que usted ya conoce el teorema de Thévenin (que simplifica un circuito lineal complejo a una fuente de voltaje en serie con una resistencia), comprender el de Norton es muy directo.
+
+El teorema de Norton establece que cualquier circuito eléctrico lineal con fuentes de energía y resistencias puede ser reemplazado en dos de sus terminales por un circuito equivalente más simple, compuesto por una fuente de corriente constante en paralelo con una resistencia.
+
+Convertir un equivalente de Thévenin a uno de Norton (o viceversa) es sumamente sencillo y se realiza mediante el principio de transformación de fuentes aplicando la Ley de Ohm. Las ecuaciones son las siguientes:
+\begin{enumerate}
+  \item La Resistencia (\(R_N\)): La resistencia de Norton es exactamente la misma que la resistencia de Thévenin. Se calcula apagando las fuentes independientes de la misma manera. Las fuentes de tensión se enmudecen cortocircuitando sus terminales, y las de corriente se las reemplaza por un circuito abierto.
+  \[
+    R_N = R_{th}
+  \]
+  \item La Corriente (\(I_N\)): La corriente de Norton equivale a la corriente de cortocircuito entre los terminales de salida (\(R_L=0\)). Si se tiene el equivalente de Thevenin se calcula dividiendo el voltaje de Thevenin entre la resistencia.
+  \[
+    I_N = \frac{V_{th}}{R_{th}}
+  \]
+\end{enumerate}

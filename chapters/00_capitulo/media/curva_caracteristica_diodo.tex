@@ -1,0 +1,162 @@
+% ============================================================
+%  Curva Característica I-V del Diodo
+%  Requiere: tikz, siunitx
+%  Librerías TikZ: arrows.meta
+% ============================================================
+
+% ── Paleta de colores ──────────────────────────────────────
+\definecolor{curvaColor}{RGB}{30, 90, 200}      % azul principal
+\definecolor{directaColor}{RGB}{20, 130, 60}    % verde (directa)
+\definecolor{inversaColor}{RGB}{180, 70, 20}    % naranja/rojo (inversa)
+\definecolor{rupturaColor}{RGB}{160, 20, 60}    % rojo oscuro (ruptura)
+\definecolor{fondoDirecta}{RGB}{220, 245, 225}  % verde muy claro
+\definecolor{fondoInversa}{RGB}{255, 235, 220}  % naranja muy claro
+\definecolor{axisGray}{RGB}{60, 60, 60}
+
+\begin{tikzpicture}[
+  >=Latex,
+  font=\small,
+  thick,
+  % Estilo para etiquetas de región
+  regionLabel/.style={
+    font=\footnotesize\bfseries,
+    align=center,
+    rounded corners=3pt,
+    inner sep=4pt,
+    draw=gray!40,
+    fill=white,
+    opacity=0.95
+  }
+]
+
+% ─────────────────────────────────────────────────────────────
+%  FONDO DE REGIONES  (capa inferior)
+% ─────────────────────────────────────────────────────────────
+\begin{scope}[on background layer]
+  % Región de polarización directa (V > 0)
+  \fill[fondoDirecta, opacity=0.6]
+    (0.05, -3.4) rectangle (3.1, 4.8);
+  % Región de polarización inversa (V < 0)
+  \fill[fondoInversa, opacity=0.45]
+    (-5.3, -3.4) rectangle (0.05, 4.8);
+\end{scope}
+
+% ─────────────────────────────────────────────────────────────
+%  EJES
+% ─────────────────────────────────────────────────────────────
+\draw[axisGray, thick, ->] (-5.4, 0) -- (3.4, 0)
+  node[right, font=\small] {$V$ (\unit{V})};
+\draw[axisGray, thick, ->] (0, -3.5) -- (0, 5.0)
+  node[above, font=\small] {$I$ (\unit{mA})};
+
+% Origen
+\node[below left, font=\scriptsize, axisGray] at (0, 0) {$O$};
+
+% Marcas menores en el eje V (escala esquemática)
+\foreach \x in {-5,-4,-3,-2,-1,1,2,3} {
+  \draw[axisGray, thin] (\x, 0.06) -- (\x, -0.06);
+}
+\foreach \y in {-3,-2,-1,1,2,3,4} {
+  \draw[axisGray, thin] (0.06, \y) -- (-0.06, \y);
+}
+
+% ─────────────────────────────────────────────────────────────
+%  CURVA CARACTERÍSTICA DEL DIODO
+% ─────────────────────────────────────────────────────────────
+
+% 1. Zona de RUPTURA (caída abrupta a -V_BR = -5 V esquemático)
+\draw[rupturaColor, very thick, line cap=round]
+  (-4.8, -3.2) -- (-4.8, -0.22);
+
+% 2. Corriente inversa de saturación (casi plana, muy pequeña)
+\draw[curvaColor, very thick]
+  (-4.8, -0.22) -- (-0.35, -0.22);
+
+% 3. Transición suave cerca del origen
+\draw[curvaColor, very thick]
+  (-0.35, -0.22) ..
+  controls (-0.1, -0.22) and (0.02, -0.02) ..
+  (0.08, 0);
+
+% 4. Polarización directa sub-umbral (0 → 0.7 V): corriente ≈ 0
+\draw[curvaColor, very thick]
+  (0.08, 0) -- (1.1, 0.08);
+
+% 5. Polarización directa sobre la rodilla (V > 0.7 V): subida exponencial
+%    Recortado al área del diagrama con \clip
+\begin{scope}
+  \clip (-5.5, -3.5) rectangle (3.3, 4.85);
+  \draw[directaColor, very thick, domain=1.1:2.45, samples=80]
+    plot (\x, {0.08 + 4.2 * pow(\x - 1.1, 1.75)});
+\end{scope}
+
+% ─────────────────────────────────────────────────────────────
+%  LÍNEAS DE REFERENCIA PUNTEADAS
+% ─────────────────────────────────────────────────────────────
+
+% Voltaje umbral (rodilla) en 0.7 V
+\draw[gray!65, dashed, thin] (1.1, 0) -- (1.1, 0.08);
+
+% Voltaje de ruptura
+\draw[gray!65, dashed, thin] (-4.8, 0) -- (-4.8, 0.12);
+
+% Nivel de corriente de saturación
+\draw[gray!65, dashed, thin] (0, -0.22) -- (-0.35, -0.22);
+
+% ─────────────────────────────────────────────────────────────
+%  MARCAS Y ETIQUETAS DE VALORES
+% ─────────────────────────────────────────────────────────────
+
+% Tick + etiqueta: 0.7 V
+\draw[gray!70, thin] (1.1, 0.07) -- (1.1, -0.07);
+\node[below, font=\footnotesize, text=gray!80] at (1.1, -0.1)
+  {$\qty{0.7}{V}$};
+
+% Tick + etiqueta: -V_BR
+\draw[gray!70, thin] (-4.8, 0.07) -- (-4.8, -0.07);
+\node[below, font=\footnotesize, text=rupturaColor] at (-4.8, -0.1)
+  {$-V_{BR}$};
+
+% Corriente de saturación inversa
+\node[right, font=\footnotesize, text=curvaColor] at (0.08, -0.22)
+  {$-I_S$};
+
+% ─────────────────────────────────────────────────────────────
+%  ETIQUETAS DE REGIÓN
+% ─────────────────────────────────────────────────────────────
+
+% Polarización DIRECTA
+\node[regionLabel, text=directaColor] at (2.1, 4.45)
+  {Polarización\\Directa};
+
+% Polarización INVERSA
+\node[regionLabel, text=inversaColor] at (-2.3, -1.7)
+  {Polarización\\Inversa};
+
+% Zona de RUPTURA con flecha
+\node[regionLabel, text=rupturaColor] (nRuptura) at (-3.2, -2.8)
+  {Zona de\\Ruptura};
+\draw[->, rupturaColor!60, thin]
+  (nRuptura.north west) -- (-4.6, -1.8);
+
+% ─────────────────────────────────────────────────────────────
+%  ANOTACIONES FÍSICAS CLAVE
+% ─────────────────────────────────────────────────────────────
+
+% Flecha + nota: barrera de potencial
+\draw[<-, gray!60, thin]
+  (1.4, 0.2) -- ++(20:1) node[above, align=left, font=\scriptsize, text=gray!70]{Barrera de\\ potencial};
+
+% Flecha + nota: corriente casi nula en inversa
+\draw[->, gray!60, thin]
+  (-1.8, 0.5) -- (-1.0, -0.2);
+\node[above, align=center, font=\scriptsize, text=gray!70]
+  at (-1.9, 0.6) {Corriente de\\fuga ($\approx 0$)};
+
+% ─────────────────────────────────────────────────────────────
+%  NOTA DE ESCALA (eje V no lineal entre regiones)
+% ─────────────────────────────────────────────────────────────
+\node[font=\scriptsize, text=gray!60, align=left]
+  at (-1, -3.7) {\textit{Nota: escala del eje $V$ no lineal (esquemática)}};
+
+\end{tikzpicture}
