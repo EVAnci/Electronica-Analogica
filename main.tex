@@ -32,8 +32,24 @@
   sources/fill=yellow!50,
 }
 
+% Colors
+\usepackage{xcolor}
+\definecolor{soft_blue}{rgb}{0.39, 0.58, 0.93} % dark_blue
+\definecolor{soft_red}{rgb}{0.8, 0.31, 0.36} % red
+\definecolor{soft_green}{RGB}{100,180,100} % green
+\definecolor{url}{rgb}{0.45, 0.29, 0.58} % purple
+
+% hyperlinks
+\usepackage[colorlinks=true,
+    linkcolor=url,
+    urlcolor=soft_blue,
+    citecolor=soft_blue,
+    hypertexnames=false]{hyperref}
+
+% figures and subfigures environments
 \usepackage{subcaption}
 
+% physics standard unit system
 \usepackage{siunitx}
 \sisetup{
   locale = FR,
@@ -41,10 +57,16 @@
   per-mode = symbol
 }
 
+% Bibliography stuff
+\usepackage[backend=biber, style=authoryear-icomp]{biblatex}
+\addbibresource{main.bib}
+
+% Custom environments
 \input{envs.tex}
 
 \title{Electrónica Analógica}
 \author{Elio Valentino Anci}
+
 \begin{document}
   \maketitle
   \tableofcontents
@@ -54,4 +76,6 @@
   % El capitulo 7 contiene gic, nic y filtros pasivos y activos. Cambiar la 
   % ubicación de esto para que tenga sentido y sea modular
   \include{chapters/07_capitulo/main}
+
+  \printbibliography
 \end{document}
