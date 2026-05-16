@@ -1,0 +1,70 @@
+\section{Nomenclatura y Variables de Circuito}
+\label{sec_transistor_nomenclatura}
+
+Ahora que comprende el intrincado diseño físico del transistor, es momento de abstraer su funcionamiento. Un transistor de unión bipolar (BJT) actúa, fundamentalmente, como una válvula controlada por corriente. La gran ventaja de este componente reside en que una corriente minúscula inyectada en la base tiene la capacidad de controlar una avalancha de electrones mucho mayor que fluye desde el emisor hacia el colector. 
+
+Siempre recuerde que la corriente convencional es opuesta a la dirección en la que fluyen los electrones. De esto se trata con detalle en el libro \citetitle{f2elio} de \cite{f2elio}. Sin embargo es conveniente realizar el análisis del transistor usando el flujo de electrones ya que la explicación a nivel atómico lo requiere. Mas luego en el análisis a nivel de circuito se suele emplear la corriente convencional asumiendo que se comprende su funcionamiento electrónico.
+
+Para trasladar esta realidad física al análisis y diseño de redes eléctricas, se emplea una simbología estandarizada, representada en la figura \ref{fig_nomenclatura}.
+
+\begin{figure}[!ht]
+  \centering
+  \begin{subfigure}[b]{0.4\textwidth}
+    \centering
+    \begin{circuitikz}
+      \draw (0,0) node[npn](Q){};
+      \node[font=\footnotesize,left] at (Q.B) {Base};
+      \node[font=\footnotesize,above] at (Q.C) {Colector};
+      \node[font=\footnotesize,below] at (Q.E) {Emisor};
+    \end{circuitikz}
+    \caption{Transistor NPN.}
+    \label{sfig_npn_symbol}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.4\textwidth}
+    \centering
+    \begin{circuitikz}
+      \draw (0,0) node[pnp](Q){};
+      \node[font=\footnotesize,left] at (Q.B) {Base};
+      \node[font=\footnotesize,below] at (Q.C) {Colector};
+      \node[font=\footnotesize,above] at (Q.E) {Emisor};
+    \end{circuitikz}
+    \caption{Transistor PNP.}
+  \end{subfigure}
+  \caption{Tipos de transistores y su simbología.}
+  \label{fig_nomenclatura}
+\end{figure}
+
+Observe detenidamente la figura \ref{sfig_npn_symbol}, el transistor \emph{npn} tiene una flecha ubicada en el terminal del emisor. Esta flecha no es un mero detalle estético; es una regla mnemotécnica poderosa y una herencia directa de la analogía de los diodos que dedujo anteriormente junto a Luis y Carl. La flecha indica el sentido de la corriente convencional (de positivo a negativo) y apunta siempre desde la región con dopaje P hacia la región con dopaje N.
+\begin{itemize}
+  \item En el transistor \textit{NPN}, la base es P y el emisor es N. Por ende, la flecha apunta ``hacia afuera''. Si polariza esta ``unión-diodo'' en directa (aplicando \qty{0.7}{\volt} en la base respecto al emisor), se abre el paso para la gran corriente de colector.
+  \item En el transistor \textit{PNP}, el emisor es P y la base es N, por lo que la flecha apunta ``hacia adentro''. Opera bajo los mismos principios, pero de forma complementaria: todas las polaridades de tensión y los sentidos de corriente se invierten.
+\end{itemize}
+
+\subsection{Variables Fundamentales del Circuito}
+
+Para el estudio formal del transistor, especialmente durante el análisis en corriente continua (DC), utilizamos un conjunto de variables estandarizadas con letras y subíndices en mayúscula:
+\begin{enumerate}
+  \item \(V_{CC}\) (o \(V_{EE}\)): Tensión de alimentación de la fuente. Representa la energía principal que abastece a la malla de salida del circuito.
+  \item \(I_B, I_C, I_E\): Corrientes de base, colector y emisor, respectivamente. La corriente de base (\(I_B\)) actúa como la señal de control, la del colector (\(I_C\)) es la corriente controlada, y la de emisor es la suma de ambas (\(I_E = I_B + I_C\) por ley de corrientes de Kirchhoff).
+  \item \(V_{CE}\): Tensión colector-emisor. Es la caída de potencial a través de los terminales de salida del transistor. Su valor es el indicador definitivo para determinar en qué región está operando el dispositivo (corte, activa o saturación).
+  \item \(V_{BE}\): Tensión base-emisor. Es el umbral de encendido. Cuando el transistor opera en la región activa, esta unión se comporta como un diodo polarizado en directa, asumiéndose una caída térmica\footnote{Se dice caída térmica ya que la caída de potencial \(V_{BE}\) depende de la temperatura de operación.} casi constante de \qty{0.7}{\volt} para el silicio.
+  \item \(\beta\) (también denotado en las hojas de datos como \(h_{FE}\)): Ganancia estática de corriente en configuración emisor común\footnote{La configuración en \emph{emisor común} es una topología de circuito donde el terminal del emisor se conecta al punto de referencia (comúnmente tierra). Al estar referenciado a tierra, el emisor actúa como un nodo compartido tanto para el lazo de entrada (entre base y emisor) como para el lazo de salida (entre colector y emisor). Es la configuración más utilizada debido a que proporciona una gran amplificación tanto de voltaje como de corriente.}. Representa el factor de multiplicación del transistor, definiendo la relación directa en la región activa: \(I_C = \beta I_B\).
+
+    La ganancia de corriente \(\beta\) es un valor muy importante de un transistor y será muy utilizado en general.
+\end{enumerate}
+
+Del ítem 2, observe que se puede obtener una comparación de las corrientes. Dado que el emisor es la fuente de los electrones, es la corriente más grande. La mayor parte del flujo de electrones llega al colector, por lo que la corriente de colector es prácticamente igual a la corriente de emisor. En comparación, la corriente de la base es muy pequeña, a menudo menor que el 1\% de la corriente de colector. Por lo tanto, generalmente la aproximación 
+\[
+  I_E \approx I_C
+\]
+se considera válida.
+
+\subsection{Resistencias del Circuito de Polarización}
+
+Un transistor rara vez se conecta directamente a las fuentes de tensión. Para establecer un punto de operación seguro (conocido como punto \(Q\)), se diseña una red de polarización mediante resistencias externas. Es vital mantener la consistencia en su nomenclatura:
+
+\begin{itemize}
+  \item \(R_B\) (Resistencia de base): Se coloca en serie con el terminal de entrada. Su función es restringir y fijar la corriente \(I_B\), protegiendo la unión base-emisor de corrientes excesivas que podrían destruirla.
+  \item \(R_C\) (Resistencia de colector): Ubicada en la rama principal de salida. No solo limita la corriente máxima \(I_C\), sino que tiene una función crucial en los amplificadores: convierte las variaciones de corriente de colector en variaciones de tensión (\(V_{CE}\)) que pueden ser entregadas a la siguiente etapa del circuito.
+  \item \(R_E\) (Resistencia de emisor): Aunque es opcional en los circuitos más elementales, su función principal es proporcionar estabilidad al punto de operación. Genera un efecto de realimentación negativa térmica: si el transistor se calienta y su ganancia (\(\beta\)) aumenta, \(R_E\) frena el incremento descontrolado de la corriente, evitando que el componente se destruya.
+\end{itemize}

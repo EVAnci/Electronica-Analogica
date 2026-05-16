@@ -1,0 +1,44 @@
+\section{Curvas Características del Transistor}
+
+En esta sección se realizará el análisis de las variables de la sección \ref{sec_transistor_nomenclatura}. Y para ello se empleará la figura \ref{sfig_circuito_ec}.
+
+\subsection{Curva característica de entrada}
+¿Qué forma cree que tiene la gráfica de la corriente de base \(I_B\) en función de la tensión base-emisor \(V_{BE}\)? Si recuerda que esta unión se comporta exactamente como un diodo convencional, la respuesta es inmediata: su gráfica es idéntica a la de un diodo polarizado en directa. 
+
+Por lo tanto, podemos aplicar las mismas simplificaciones estudiadas anteriormente. Al analizar la malla de entrada, la corriente se define por la ley de Ohm:
+\[
+I_B = \frac{V_{BB} - V_{BE}}{R_B}
+\]
+Para el análisis práctico de circuitos, la segunda aproximación del diodo es el equilibrio perfecto entre simplicidad y precisión. Basta con asumir que, una vez encendido el transistor, la barrera de potencial \(V_{BE}\) se mantiene casi constante en aproximadamente \qty{0.7}{\volt}.
+
+\subsection{Curva de colector y regiones de operación}
+
+La verdadera naturaleza del transistor se revela al observar su salida. Supongamos que fijamos la corriente de base \(I_B\) en un valor pequeño y constante (por ejemplo, \qty{10}{\micro\ampere}). A continuación, comenzamos a variar la tensión de la fuente del colector y medimos tanto la corriente de colector \(I_C\) como la tensión en los terminales \(V_{CE}\). 
+
+Al trazar estas mediciones, la gráfica resultante no es una línea recta como dictaría una resistencia simple, sino que revela distintas zonas de comportamiento dictadas por el diseño interno del componente.
+
+\paragraph{La región activa}
+Si observa la gráfica a medida que \(V_{CE}\) supera un umbral mínimo, verá que la curva se vuelve casi completamente horizontal. Es decir, \(I_C\) se mantiene constante aunque sigamos aumentando la tensión del colector. 
+
+¿Por qué ocurre esto? Recuerde la explicación física que dedujimos antes: el colector se limita a atrapar los electrones que el emisor logra inyectar a través de la base. La cantidad de electrones disponibles depende única y exclusivamente de la corriente de base \(I_B\). Por más que aumentemos el voltaje \(V_{CE}\) para intentar ``succionar'' más corriente, el colector no puede absorber electrones que no existen. En esta zona plana, conocida como región activa, el transistor actúa como un amplificador perfecto donde la corriente de salida es simplemente un múltiplo de la entrada (\(I_C = \beta I_B\)).
+
+\paragraph{La región de saturación}
+¿Qué sucede en la parte inicial de la gráfica, cuando \(V_{CE}\) se acerca a \qty{0}{\volt}? En este punto, la tensión del colector es tan débil que su campo eléctrico pierde la fuerza necesaria para capturar a los electrones que cruzan la base. Al no haber un ``tobogán'' lo suficientemente inclinado para barrerlos, la corriente de colector cae abruptamente hacia cero. A esta pendiente casi vertical se la conoce como región de saturación.
+
+\paragraph{La región de corte}
+Si realizamos el experimento forzando \(I_B = 0\) (por ejemplo, desconectando la base), esperaríamos que la corriente de colector fuera exactamente cero. En la gráfica, esto se representa como una curva microscópica pegada al eje horizontal inferior. Esta ínfima circulación se debe a corrientes de fuga térmicas propias de los semiconductores, pero en la inmensa mayoría de las aplicaciones prácticas es tan pequeña que el transistor se considera un interruptor abierto perfecto. Esta es la región de corte.
+
+\subsection{Familia de curvas y límites de potencia}
+Si repetimos el procedimiento midiendo \(I_C\) para distintos valores fijos de \(I_B\) (\qty{20}{\micro\ampere}, \qty{30}{\micro\ampere}, etc.), obtendremos una familia de curvas. Cada peldaño horizontal superior representa una corriente de colector proporcionalmente mayor. Este conjunto de gráficas es la huella dactilar del transistor y define su ganancia de corriente continua (\(\beta\)).
+
+Sin embargo, el funcionamiento en estas regiones tiene límites físicos ineludibles. Aplicando la ley de las tensiones de Kirchhoff en la malla de salida, la caída de potencial en el dispositivo es:
+\[
+V_{CE} = V_{CC} - I_C R_C
+\]
+Y la potencia que el transistor debe disipar en forma de calor es el producto de su tensión y su corriente:
+\[
+P_D = V_{CE} I_C
+\]
+Si la combinación de voltaje y corriente genera una potencia (\(P_D\)) que supera la potencia máxima especificada por el fabricante, la temperatura interna excederá rápidamente los \qty{150}{\degreeCelsius} y el cristal de silicio se destruirá por exceso térmico. 
+
+De manera similar, si continuamos aumentando \(V_{CE}\) desproporcionadamente en la gráfica, llegaremos a un muro infranqueable: la \textit{región de disrupción} (o ruptura). En este punto, la unión base-colector cede ante la inmensa presión del campo eléctrico, la corriente se dispara sin control y el componente se daña de forma permanente. Por ello, el diseño de cualquier circuito debe asegurar que el transistor opere siempre dentro de las zonas seguras (activa, corte o saturación), lejos de estos límites destructivos.

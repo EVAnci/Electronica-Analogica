@@ -1,0 +1,36 @@
+\section{Tipos de conexión}
+
+Las siguientes son tres formas de conectar un transistor: emisor común (EC), colector común (CC) o base común (BC). Para los fines de este capítulo solo se analizará la conexión EC, ya que es la más utilizada.
+
+\subsection{Emisor común}
+
+En teoría de circuitos se llama lazo a una trayectoria cerrada de corriente dentro del circuito. Por ejemplo la figura \ref{sfig_ej_lazo} representa un lazo que consiste de una resistencia y una fuente de tensión. 
+
+Por otro lado, la figura \ref{sfig_circuito_ec} tiene dos mallas: la malla de la izquierda es la malla de la base y la de la derecha es la malla del colector. En la malla de la base, la fuente \(V_{BB}\) polariza en directa al diodo de emisor con \(R_B\) como resistencia limitadora de corriente. Cambiando \(V_{BB}\) o \(R_B\) se puede cambiar la corriente de base, y por lo tanto cambiar la corriente de colector. En otras palabras, la corriente de la base controla la corriente del colector.
+
+\begin{figure}[!ht]
+  \centering
+  \begin{subfigure}[t]{0.25\textwidth}
+    \centering
+    \begin{circuitikz}[scale=0.8,transform shape]
+      \draw (0,0) to[battery,invert] (0,3) to[short] (2,3) to[R] (2,0) to[short] (0,0);
+    \end{circuitikz}
+    \caption{Ejemplo de lazo.}
+    \label{sfig_ej_lazo}
+  \end{subfigure}
+  \hspace{0.5cm}
+  \begin{subfigure}[t]{0.6\textwidth}
+    \centering
+    \begin{circuitikz}[scale=0.8,transform shape]
+      \draw (0,0) node[npn](Q){};
+      \draw (Q.C) to[short] ++(0,0.5) to[R,l={\(R_C\)}] ++(2.5,0) to[battery,l={\(V_{CC}\)}] ++(0,-3) coordinate(GND) node[ground]{};
+      \draw (Q.B) to[R,l_={\(R_B\)}] ++(-3,0) coordinate(tmp) to[battery,l_={\(V_{BB}\)}] (GND -| tmp) node[ground]{};
+      \draw (Q.E) -- (GND -| Q.E) node[ground]{};
+    \end{circuitikz}
+    \caption{Topología de circuito con configuración EC.}
+    \label{sfig_circuito_ec}
+  \end{subfigure}
+  \caption{}
+\end{figure}
+
+En la malla de colector, una tensión de fuente \(V_{CC}\) polariza en inversa al diodo de colector a través de \(R_C\). La tensión de alimentación \(V_{CC}\) debe polarizar en inversa el diodo colector, de lo contrario el transistor no funcionará apropiadamente. Dicho de otra manera, el colector debe ser positivo para recolectar los electrones libres.
