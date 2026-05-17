@@ -1,0 +1,22 @@
+\begin{tikzpicture}[scale=0.8,>=stealth]
+  \draw[->,gray] (-.4,0) -- (8.4,0) node[right,font=\scriptsize]{\(V_{CE}\)};
+  \draw[->,gray] (0,-.4) -- (0,5.4) node[above,font=\scriptsize]{\(I_C\) [\unit{\milli\ampere}]};
+
+  \draw[thick,teal!40] (0,0) -- ++(20:.05) to[out=20,in=180] ++(.35,.1) -- 
+    node[midway,above,font=\tiny,color=black]{\(I_B=\qty{0}{\ampere}\) (Corriente de base)} ++(7.5,0);
+  \draw[thick,teal!40] (0,0) -- ++(70:.5) to[out=70,in=180] ++(.35,.3) -- 
+    node[midway,above,font=\tiny,color=black]{\qty{10}{\micro\ampere}} ++(7.1,0);
+  \foreach \i [evaluate=\i as \corriente using int(20*\i)] in {1,1.5,2,2.5,3,3.5} {
+    \draw[thick,teal!40] (0,0) -- ++(70:\i) to[out=70,in=180] ++(.35,.4) -- 
+      node[midway,above,font=\tiny,color=black]{\qty{\corriente}{\micro\ampere}} ++(7.6-\i,0);
+  }
+  \foreach \i in {1,2,3,4,5,6,7}{
+    \draw[gray,thin] (.1,0.52*\i+.2) -- (-.1,0.52*\i+.2) node[left,font=\tiny]{\qty{\i}{\milli\ampere}};
+  }
+  \draw[gray,thin] (1,0) -- (1,-0.1) node[below,font=\tiny]{\qty{1}{\volt}};
+  \draw[gray,thin] (7.6,0) -- (7.6,-0.1) node[below,font=\tiny]{\qty{40}{\volt}};
+  \draw[gray!50!blue,->] (-2.3,5) node[above,text width=1.5cm,align=center,font=\scriptsize,draw]{Punto de saturación} to[out=-90,in=120] (-0.1,2.9);
+  \draw[gray!50!red,->] (7,2) node[above,fill=white,text width=1.5cm,align=center,font=\scriptsize,draw]{Punto de corte} to[out=-90,in=60] (5.1,0.1);
+  \filldraw[very thick] (0,2.8) circle (1pt) -- (5,0) circle (1pt) node[below,font=\small]{\qty{15}{\volt}};
+  \filldraw (1.75,1.83) circle (3pt) node[above=.3cm,draw,fill=white]{Q};
+\end{tikzpicture}

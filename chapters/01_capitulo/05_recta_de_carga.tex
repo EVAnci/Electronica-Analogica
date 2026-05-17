@@ -1,0 +1,63 @@
+\subsection{La recta de carga: el entorno dicta las reglas}
+
+Tras observar la familia de curvas, Carl borra parte de la pizarra para hacer un cambio de perspectiva radical. ``Hasta ahora hemos analizado las curvas características, que representan la identidad o el ADN del transistor. No importa dónde lo conectes, esas curvas dictan de lo que es físicamente capaz de hacer por sí solo'', explica el profesor. ``Sin embargo, cuando lo soldamos a una placa, el transistor ya no manda en solitario''.
+
+Carl dibuja una línea recta superpuesta sobre las curvas de salida del transistor. ``Esta es la \emph{recta de carga}. Y, a diferencia de las curvas que vimos antes, no tiene absolutamente nada que ver con el transistor en sí. Representa a todo el circuito externo que has conectado a sus terminales; específicamente, tu fuente de alimentación y tus resistencias. Es, literalmente, la representación gráfica de las leyes de Kirchhoff impuestas sobre tu circuito''.
+\begin{figure}[!ht]
+  \centering
+  \input{chapters/01_capitulo/media/5_recta_de_carga.tex}
+  \caption{Recta de carga del circuito de la figura \ref{fig_circuito_em_comm2}.}
+\end{figure}
+
+\paragraph{La matemática detrás de la recta}
+Para demostrarlo, Carl plantea la malla de salida de un circuito básico: la energía parte de la fuente \(V_{CC}\), baja por la resistencia \(R_C\), atraviesa el transistor desde el colector hasta el emisor (\(V_{CE}\)) y finalmente llega a tierra como muestra la figura \ref{fig_circuito_em_comm2}.
+\begin{figure}[!ht]
+  \centering
+  \begin{circuitikz}[scale=0.8,transform shape]
+    \draw (0,0) node[npn](Q){};
+    \node[right] at (Q.center){\(V_{CE}\)};
+    \draw (Q.C) to[short] ++(0,0.5) coordinate(tmp) to[R,l={\(R_C=\qty{3}{\kilo\ohm}\)}] ++(2.5,0) to[battery,l={\(V_{CC}=\qty{15}{\volt}\)}] ++(0,-3) coordinate(GND) node[ground]{};
+    \draw (Q.B) to[R,l={\(R_B=\qty{497}{\kilo\ohm}\)}] ++(-3,0) coordinate(tmp2) -- (tmp -| tmp2) to[short,-*] (tmp);
+    \draw (Q.E) -- (GND -| Q.E) node[ground]{};
+  \end{circuitikz}
+  \caption{Esquema para representar la recta de carga.}
+  \label{fig_circuito_em_comm2}
+\end{figure}
+
+Aplicando la ley de las tensiones de Kirchhoff, escribe en la pizarra:
+\[
+V_{CC} = I_C R_C + V_{CE}
+\]
+``Si despejamos la corriente de colector (\(I_C\)) para poder graficarla en el eje vertical, en función de la tensión del transistor (\(V_{CE}\)) en el eje horizontal'', continúa Carl, reordenando los términos, ``obtenemos la inconfundible ecuación de una línea recta (\(y = m x + b\))'':
+\[
+I_C = \left(-\frac{1}{R_C}\right) V_{CE} + \frac{V_{CC}}{R_C}
+\]
+
+Luis observa la ecuación y rápidamente deduce los límites físicos de esa recta. ``Claro... el corte en el eje horizontal (el voltaje máximo) sería cuando el transistor está apagado y no pasa corriente, es decir, \(I_C = 0\). Como no hay caída de tensión en la resistencia, todo el voltaje de la fuente cae sobre el transistor. Por lo tanto, \(V_{CE} = V_{CC}\)''.
+
+``¡Exacto! Y el corte en el eje vertical ocurre en el extremo opuesto'', afirma Carl. ``Si imaginamos que el transistor es un cortocircuito perfecto (\(V_{CE} = 0\)), la corriente máxima posible estará limitada únicamente por la fuente y la resistencia externa. Por pura ley de Ohm, el límite superior es \(I_C = \frac{V_{CC}}{R_C}\)''.
+
+\paragraph{La pendiente y el compromiso eléctrico}
+``¿Y de qué depende su pendiente?'', se pregunta Luis en voz alta, analizando la fórmula.
+    
+``Observa el término que acompaña a tu variable'', señala Carl, golpeando la tiza contra el paréntesis de la ecuación. ``La pendiente es \(-\frac{1}{R_C}\). Depende única y exclusivamente de la resistencia de carga que hayas colocado en tu circuito. Si pones una resistencia muy grande, la fracción se hace minúscula y la pendiente se `acuesta', volviéndose casi horizontal. Si pones una resistencia muy chica, la fracción crece y la recta se vuelve mucho más vertical''.
+
+Para cerrar la idea, Carl recurre a una analogía más cotidiana. ``Imagina que vas pedaleando en tu bicicleta. Tú, al igual que el transistor, tienes tu propia `curva' de rendimiento biomecánico: a tal esfuerzo muscular, logras cierta cadencia. Pero la pendiente de la calle y el rozamiento del viento actúan como tu circuito externo, imponiendo sus propias reglas físicas y limitando lo que realmente puedes alcanzar''. 
+
+Carl dibuja un gran punto donde la línea recta corta una de las curvas del transistor como muestra la figura \ref{fig_punto_q}. ``Tu rendimiento real al pedalear es un compromiso entre tu capacidad y las condiciones del entorno. En electrónica ocurre exactamente lo mismo. El único estado eléctrico posible donde el transistor cumple sus propias leyes internas y, al mismo tiempo, respeta el circuito externo al que está conectado, es el punto exacto donde la recta y la curva se cruzan. A este cruce lo llamamos \emph{Punto de Operación} o \emph{Punto Q}''. Observe que el punto Q se posicionará según sea la corriente de base. Como en el circuito de la figura \ref{fig_circuito_em_comm2} la corriente de base es de 
+\[
+  I_B = \frac{\qty{15}{\volt}}{\qty{500}{\kilo\ohm}}=\qty{30}{\micro\ampere}
+\]
+entonces el punto Q es la intersección de la recta de carga y la curva del transistor correspondiente a la corriente de base de \qty{30}{\micro\ampere}.
+
+\begin{figure}[!ht]
+  \centering
+  \input{chapters/01_capitulo/media/6_punto_q.tex}
+  \caption{Determinación del punto Q.}
+  \label{fig_punto_q}
+\end{figure}
+
+Luis asiente, comprendiendo finalmente la filosofía detrás de los esquemas que dibujaba mecánicamente. ``Por eso, al diseñar un circuito desde cero, lo primero que haces no es buscar el transistor...''.
+
+``Así es'', concluye Carl. ``Primero planteas tu recta de carga. Determinas qué corriente necesitas y qué fuente de alimentación tienes, lo que te dará tu pendiente y tus límites. Una vez que estableciste las reglas del entorno, recién entonces buscas en los manuales un transistor cuyas curvas se acomoden bien a la recta que tú ya trazaste''.
+
