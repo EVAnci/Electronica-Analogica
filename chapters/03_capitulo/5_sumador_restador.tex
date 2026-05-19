@@ -1,0 +1,63 @@
+
+\section{Amplificador sumador-restador}
+
+Suma dos conjuntos de señales y computa la diferencia entre ellos. El diagrama del circuito se representa en la figura \ref{fig_sumador_restador}.
+\begin{figure}[!ht]
+  \centering
+  \begin{circuitikz}
+    \node[op amp](OA) at (0,0){};
+    % inversora
+    \draw (OA.-) to[short] ++(-1,0) to[short] ++(0,1) coordinate(tmp) to[R,l_={\(R_2^-\)},i<_={\(i_2^-\)},*-o] ++(-3,0) node[left]{\(v_2^-\)};
+    \draw (OA.-) to[short,*-] ++(-1,0) to[R,l_={\(R_1^-\)},i<_={\(i_1^-\)},*-o] ++(-3,0) node[left]{\(v_1^-\)};
+    \draw[dotted,thick] (tmp) -- ++(0,1.5) coordinate(nnode);
+    \draw (nnode) to[R,l_={\(R_m^-\)},i<_={\(i_m^-\)},-o] ++(-3,0) node[left]{\(v_m^-\)};
+    \draw (A.-) to[short,*-] ++(0,1) to[R,l={\(R_f^-\)},i={\(i_f^-\)}] (tmp -| OA.out) to[short,-*] (OA.out) to[short,-o] ++(1,0) node[right]{\(v_\text{out}\)};
+    % no inversora
+    \draw (OA.+) to[short] ++(-1,0) to[short] ++(0,-1) coordinate(R1) to[short] ++(0,-1) coordinate(tmp) to[R,l_={\(R_2^+\)},i<_={\(i_2^+\)},-o] ++(-3,0) node[left]{\(v_2^+\)};
+    \draw (R1) to[R,l_={\(R_1^+\)},i<_={\(i_1^+\)},*-o] ++(-3,0) node[left]{\(v_1^+\)};
+    \draw[dotted,thick] (tmp) -- ++(0,-1.5) coordinate(nnode);
+    \draw (nnode) to[R,l_={\(R_n^+\)},i<_={\(i_n^+\)},-o] ++(-3,0) node[left]{\(v_n^+\)};
+    \draw (tmp) to[R,l={\(R_1^+\)},i={\(i_f^+\)},*-] ++(3,0)node[ground]{};
+  \end{circuitikz}
+  \caption{Configuración de sumador-restador.}
+  \label{fig_sumador_restador}
+\end{figure}
+
+Para obtener la fórmula de la salida encontramos el valor de \(v^+\) de la rama inferior. Como no circula corriente hacia dentro de los terminales del operacional, se tiene que \[i_f^+=\sum_{k=1}^n i_k^+\]
+Por lo tanto, la tensión en el terminal no inversor del operacional (\(v^+\)) es:
+\begin{align*}
+  v^+ &= i_f^+ R_f^+ \\ 
+  v^+ &= R_f^+ \sum_{k=1}^n i_k^+\\ 
+  \frac{v^+}{R_f^+} &= \sum_{k=1}^n \frac{v_k^+-v^+}{R_k^+} \\ 
+  \frac{v^+}{R_f^+} &= \sum_{k=1}^n \frac{v_k^+}{R_k^+} - v^+\sum_{k=1}^n \frac{1}{R_k^+} \\
+  \frac{v^+}{R_f^+} + v^+\sum_{k=1}^n \frac{1}{R_k^+} &=\sum_{k=1}^n \frac{v_k^+}{R_k^+} \\
+  v^+\left(\frac{1}{R_f^+}+\sum_{k=1}^n \frac{1}{R_k^+}\right) &= \sum_{k=1}^n \frac{v_k^+}{R_k^+} \\
+  v^+ &= \frac{\sum_{k=1}^n \frac{v_k^+}{R_k^+}}{\frac{1}{R_f^+}+\sum_{k=1}^n \frac{1}{R_k^+}}
+\end{align*}
+A partir de la rama superior, despejamos \(v_\text{out}\) en función de las entradas. En la rama superior también se tiene la relación \[i_f^-=\sum_{k=1}^m i_k^-\] Entonces,
+\begin{align*}
+  \frac{v^- - v_\text{out}}{R_f^-} &= \sum_{k=1}^m \frac{v_k^-v^-}{R_k^-} \\ 
+  \frac{v^-}{R_f^-} - \frac{v_\text{out}}{R_f^-} &= \sum_{k=1}^m \frac{v_k^-}{R_k^-} - v^-\sum_{k=1}^m \frac{1}{R_k^-} \\ 
+  v_\text{out} &= R_f^-\left(\frac{v^-}{R_f^-} - \sum_{k=1}^m \frac{v_k^-}{R_k^-} + v^-\sum_{k=1}^m \frac{1}{R_k^-}\right) \\ 
+  v_\text{out} &= R_f^-\left(v^-\left(\frac{1}{R_f^-}+\sum_{k=1}^m \frac{1}{R_k^-}\right) - \sum_{k=1}^m \frac{v_k^-}{R_k^-}\right) 
+\end{align*}
+Como \(v^-=v^+\), resulta
+\[
+  v_\text{out} = R_f^-\left(\frac{\sum_{k=1}^n \frac{v_k^+}{R_k^+}}{\frac{1}{R_f^+}+\sum_{k=1}^n \frac{1}{R_k^+}} \left(\frac{1}{R_f^-}+\sum_{k=1}^m \frac{1}{R_k^-}\right) - \sum_{k=1}^m \frac{v_k^-}{R_k^-}\right) 
+\]
+Si consideramos que ambas entradas tienen la misma cantidad de ramas (\(m=n\)) y que se cumple:
+\begin{itemize}
+  \item \(R_f^+=R_f^-=R_f\) 
+  \item \(R_1^+=R_1^-=R_1\) 
+  \item \(R_2^+=R_2^-=R_2\) \\ \(\vdots\)
+  \item \(R_n^+=R_n^-=R_n\) 
+\end{itemize}
+Entonces la fórmula se simplifica a 
+\[
+  v_\text{out}= R_f\left( \sum_{k=1}^n \frac{v_k^+}{R_k} - \sum_{k=1}^n \frac{v_k^-}{R_k} \right)
+\]
+Si además consideramos que \(R_1=R_2=\cdots=R_n=R\), entonces la fórmula se simplifica aún más,
+\[
+  v_\text{out} = \frac{R_f}{R} \left( \sum_{k=1}^n v_k^+ - \sum_{k=1}^n v_k^- \right)
+\]
+Observe, que primero se suman las señales de entrada (el conjunto de cada rama) y luego se resta.

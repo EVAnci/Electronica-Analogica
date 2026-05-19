@@ -1,0 +1,98 @@
+\section{Relación de rechazo de modo común}
+
+\subsection{Decibel}
+
+El decibel es una unidad logarítmica utilizada para expresar la relación entre dos magnitudes físicas. Es decir, nos indica cuántas veces una magnitud es mayor o menor que otra; generalmente se comparan valores a la entrada y la salida de un sistema.
+
+La ganancia en decibelios se define como 
+\[
+  G_\text{dB} = 10\log_{10}\left(\frac{A}{B}\right)
+\]
+Donde \(A\) y \(B\) son las magnitudes físicas a comparar.
+
+En el contexto de la electrónica, se utiliza el decibel para medir ganacias de potencia de un sistema
+\[
+  G=10\log\left(\frac{P_\text{out}}{P_\text{in}}\right)
+\]
+Teniendo en cuenta que \(P_\text{out}\) y \(P_\text{in}\) se consideran sobre la misma impedancia \(Z\), podemos expresar la ganancia de potencia en función del voltaje
+\begin{align*}
+  G&=10\log\left(\frac{P_\text{out}}{P_\text{in}}\right) \\
+  G&=10\log\left(\frac{\frac{V_\text{out}^2}{Z}}{\frac{V_\text{in}^2}{Z}}\right) \\
+  G&=10\log\left(\frac{V_\text{out}}{V_\text{in}}\right)^2\\
+  G&=20\log\left(\frac{V_\text{out}}{V_\text{in}}\right)
+\end{align*}
+Y de la misma forma puede expresarse en función de la corriente 
+\[
+  G=20 \log\left(\frac{I_\text{out}}{I_\text{in}}\right)
+\]
+
+\subsubsection{La mitad de potencia}
+
+Considere un sistema donde la potencia de una señal se atenúa a la mitad de su valor original 
+\[
+  P_\text{out}=\frac{P_\text{in}}{2}
+\]
+Entonces, la ganancia en decibelios es 
+\begin{align*}
+  G&=10\log\left(\frac{P_\text{out}}{P_\text{in}}\right) \\
+  G&=10\log\left(\frac{P_\text{in}/2}{P_\text{in}}\right) \\
+  G&=10\log\left(\frac{1}{2}\right) = -3.010299957\dots
+\end{align*}
+Por lo tanto, aproximando el resultado se dice que 
+\[
+  G\approx \qty{-3}{\decibel}
+\]
+Con esto, podemos calcular la reducción en voltaje necesaria para atenuar la potencia de la señal a la mitad
+{\allowdisplaybreaks
+\begin{align*}
+  G&=20\log\left(\frac{V_\text{out}}{V_\text{in}}\right)\\
+  10\log\left(\frac{1}{2}\right)&=20\log\left(\frac{V_\text{out}}{V_\text{in}}\right)\\
+  10\log\left(\frac{1}{2}\right)&=10\log\left(\frac{V_\text{out}}{V_\text{in}}\right)^2\\
+  \log\left(\frac{1}{2}\right)&=\log\left(\frac{V_\text{out}}{V_\text{in}}\right)^2\\
+  \frac{1}{2}&=\left(\frac{V_\text{out}}{V_\text{in}}\right)^2\\
+  \sqrt{\frac{1}{2}}&=\frac{V_\text{out}}{V_\text{in}} \\
+  V_\text{in}&=\sqrt{2}~V_\text{out}
+\end{align*}
+}
+Es decir, aproximadamente
+\[
+  V_\text{in}\approx0.707 V_\text{out}
+\]
+
+\subsection{CMRR}
+
+La fórmula de un amplificador diferencial es la siguiente, como se vió en la sección \ref{sec_amp_diff}
+\[
+  v_\text{out} = (V_\text{in}^+-V_\text{in}^-)\frac{R_2}{R_1}
+\]
+
+Es de esperar que si ambas entradas reciben la misma señal \(v_\text{in}^+=v_\text{in}^-=v_\text{in}\) (señal en modo común), la salida sea cero.
+\[
+  v_\text{out} = (v_\text{in}-v_\text{in})\frac{R_2}{R_1}= 0
+\]
+Sin embargo, este no es el caso, ya que todos los dispositivos reales generan una pequeña salida al introducir señales en modo común.
+
+Para justificar esto recordemos que la fórmula anteriormente mencionada para la ganancia es ideal, y parte de considerar que las resistencias están perfectamente emparejadas (\(R_1=R_4\) y \(R_2=R_3\)), lo cual no ocurre en la realidad. De modo que, en rigor, la ganancia del amplificador diferencial es 
+\[
+  v_\text{out}= v_\text{in}^+ \frac{R_4}{R_3+R_4}\frac{R_1+R_2}{R_1} - v_\text{in}^-\frac{R_2}{R_1}
+\]
+Las pequeñas diferencias en los valores de las resistencias provocan que ambas señales se encuentren amplificadas por valores ligeramente distintos, lo que tiene como consecuencia que cualquier señal de modo común genere una salida distinta de cero, la cual recibe el nombre de \emph{ruido en modo común}. Como bien se puede intuir, el ruido en modo común es indeseable, y siempre se busca minimizarlo.
+
+El factor de rechazo al modo común o CMRR (Common mode rejection ration) es un parámetro de los inamp que cuantifica la capacidad del circuito para no amplificar señales en modo común. Se define como 
+\[
+  \text{CMRR}_\text{dB} = 20\log_{10}\left(\frac{A_D}{A_\text{cm}}\right)
+\]
+donde 
+\begin{itemize}
+  \item \(A_D\) es la amplificación diferencial,
+  \item \(A_\text{cm}\) es la amplificación en modo común.
+\end{itemize}
+Por ejemplo, si tenemos una ganancia diferencial de 100 y una ganancia común de 0.0001, entonces el CMRR es 100.
+
+A partir de esta fórmula también podemos determinar la salida dada una cierta entrada en modo común y su amplificación diferencial:
+\begin{align*}
+  \text{CMRR}_\text{dB} &= 20 \log_{10}\left(\frac{A_D}{A_\text{cm}}\right) \\ 
+  \frac{\text{CMRR}_\text{dB}}{20} &= \log_{10}\left(\frac{A_D}{V_\text{out}/V_\text{cm}}\right) \\ 
+  10^{\text{CMRR}_\text{dB}/20} &= \frac{A_D}{V_\text{out}/V_\text{cm}} \\ 
+  V_\text{out} &= \frac{A_D~ V_\text{cm}}{10^{\text{CMRR}_\text{dB}/20}} \\ 
+\end{align*}

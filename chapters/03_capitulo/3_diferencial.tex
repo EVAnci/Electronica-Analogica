@@ -1,0 +1,52 @@
+
+\section{Amplificador diferencial}
+\label{sec_amp_diff}
+
+Amplifica la diferencia entre dos señales de entrada. El esquema del circuito se presenta en la figura \ref{fig_amp_diferencial}.
+\begin{figure}[!ht]
+  \centering  
+  \begin{circuitikz}
+    \node[op amp](A){};
+    \draw (A.-) to[short] ++(0,1) coordinate (a-) to[R,l_={\(R_1\)},i<_={\(i_1\)},-o] ++(-3,0)node[left]{\(v_\text{in}^-\)};
+    \draw (a-) to[R,l={\(R_2\)},i={\(i_2\)},*-] (a- -| A.out) to[short,-*] (A.out) to[short,-o] ++(1,0) node[right]{\(v_\text{out}\)};
+    \draw (A.+) to[short] ++(0,-1) coordinate (a+) to[R,l_={\(R_3\)},i<_={\(i_3\)},-o] ++(-3,0) node[left]{\(v_\text{in}^+\)};
+    \draw (a+) to[R,l={\(R_4\)},i={\(i_4\)},*-] ++(3,0) node[ground]{};
+    \node[left] at (A.-){\(V^-\)};
+    \node[left] at (A.+){\(V^+\)};
+  \end{circuitikz}
+  \caption{Amplificador diferencial.}
+  \label{fig_amp_diferencial}
+\end{figure}
+
+\paragraph{Derivación} Se parte de las tensiones en \(V^+\) y \(V^-\). \(V^+\) es el punto medio de un divisor de tensión. Entonces:
+\begin{equation}\label{eq_amp_diferencial_1}
+  V^+ = v_\text{in}^+ \frac{R_4}{R_3+R_4} =V^-
+\end{equation}
+Y se sabe que \(V^+=V^-\) por ser un amplificador ideal.
+
+Por otro lado, analizando las corrientes, se sabe que la corriente que ingresa al amplificador es cero, por tanto:
+\[
+i_1=i_2 \quad \text{y} \quad i_3=i_4
+\]
+Operando sobre la igualdad de la izquierda,
+\begin{align*}
+  i_1 &= i_2 \\ 
+  \frac{v_\text{in}^- -V^-}{R_1} &= \frac{V^- -v_\text{out}}{R_2}
+\end{align*}
+Como \(V^-=V^+\) reemplazamos \(V^-\) con la expresión \eqref{eq_amp_diferencial_1}:
+\begin{align*}
+  \frac{v_\text{in}^{-}}{R_1} - \frac{1}{R_1} \left(v_\text{in}^{+} \frac{R_4}{R_3+R_4}\right) &= \frac{1}{R_2}\left(v_\text{in}^{+} \frac{R_4}{R_3+R_4}\right) - \frac{v_\text{out}}{R_2}\\ 
+  \frac{v_\text{in}^-}{R_1}- \frac{v_\text{in}^+}{R_1} \frac{R_4}{R_3+R_4} &= \frac{v_\text{in}^+}{R_2}\frac{R_4}{R_3+R_4} - \frac{v_\text{out}}{R_2}
+\end{align*}
+Despejando \(v_\text{out}\), resulta:
+\begin{align*}
+  \frac{v_\text{out}}{R_2} &= \frac{v_\text{in}^+}{R_2}\frac{R_4}{R_3+R_4} - \frac{v_\text{in}^-}{R_1} + \frac{v_\text{in}^+}{R_1} \frac{R_4}{R_3+R_4} \\ 
+  v_\text{out} &= v_\text{in}^+\frac{R_4}{R_3+R_4} - \frac{v_\text{in}^- ~ R_2}{R_1} + \frac{v_\text{in}^+ ~ R_2}{R_1} \frac{R_4}{R_3+R_4} \\ 
+  v_\text{out} &= \frac{v_\text{in}^+ ~ R_4}{R_3+R_4} + \frac{R_2}{R_1} \frac{v_\text{in}^+ ~ R_4}{R_3+R_4} - \frac{v_\text{in}^- ~ R_2}{R_1} \\ 
+  v_\text{out} &= \frac{v_\text{in}^+ ~ R_4}{R_3+R_4}\left(1+\frac{R_2}{R_1}\right) - \frac{v_\text{in}^- ~ R_2}{R_1}
+\end{align*}
+Si \(R_3=R_1\) y \(R_4=R_2\), entonces, la expresión se reduce a: 
+\[
+  v_\text{out} = (v_\text{in}^+ - v_\text{in}^-) \frac{R_2}{R_1}
+\]
+es decir, amplifica la diferencia de las entradas en un factor de \(R_2/R_1\).

@@ -1,0 +1,53 @@
+
+\section{Amplificador no inversor}
+
+La configuración no inversora es similar a la configuración inversora, sin embargo en este circuito la señal de salida no se invierte (en fase) respecto de la entrada.
+\begin{figure}[!ht]
+  \centering
+  \begin{circuitikz}
+    \node[op amp](OA) at (0,0){};
+    \draw (OA.-) node[left]{\(+\)} to[short,-*] ++(0,1) coordinate(tmp) to[R,l_={\(R_1\)},i<_={\(i_1\)}] ++(-3,0) node[ground,rotate=-90]{};
+    \draw (tmp) to[R,l={\(R_2\)},i={\(i_2\)}] (tmp -| OA.out) to[short,-*] (OA.out) to[short,-o] ++(1,0) node[right]{\(v_\text{out}\)};
+    \draw (OA.+) to[short] ++(0,-.5) to[short,-o] ++(-1,0) node[left]{\(v_\text{in}\)};
+    \node[left] at (OA.+){\(-\)};
+    \node[left] at(-1,0){\(v_i\)};
+  \end{circuitikz}
+  \caption{Diagrama topológico de la configuración no inversora.}
+\end{figure}
+
+Del mismo modo que en la configuración inversora, como la corriente entrante al amplificador es cero, \(i_1=i_2\):
+\begin{align*}
+  i_1&=i_2\\ 
+  \frac{0-v_i}{R_1} &= \frac{v_i-v_\text{out}}{R_2}
+\end{align*}
+Pero como \(v_i=v_\text{in}\),
+\begin{align*}
+  -\frac{v_\text{in}}{R_1} &= \frac{v_\text{in}}{R_2} - \frac{v_\text{out}}{R_2}\\ 
+  v_\text{in}\left(\frac{1}{R_1}+\frac{1}{R_2}\right) &= v_\text{out}\frac{1}{R_2}
+\end{align*}
+Reordenando, resulta
+\begin{align*}
+  \frac{v_\text{out}}{v_\text{in}} &= \frac{R_2}{R_1} + \frac{R_2}{R_2}\\
+  \frac{v_\text{out}}{v_\text{in}} &= \frac{R_2}{R_1}+1
+\end{align*}
+Entonces, la amplificación es:
+\begin{equation}\label{eq_ampl_no_inv}
+  \boxed{A=1+\frac{R_2}{R_1}}
+\end{equation}
+
+\subsection{Seguidor de tensión}
+
+Si \(R_1\to\infty\), es decir, el terminal inversor aisla completamente respecto de tierra, y \(R_2\) se ignora (ya que si se observa la expresión \eqref{eq_ampl_no_inv} si \(R_1\to\infty\) luego \(A=1\) sin importar el valor de \(R_2\)), se obtiene un seguidor de tensión. El diagrama topológico de este circuito es como se muestra en la figura \ref{fig_seguidor}.
+\begin{figure}[!ht]
+  \centering
+  \begin{circuitikz}
+    \node[op amp](A){};
+    \draw (A.-) to[short] ++(0,1) coordinate(tmp) to[short] (tmp -| A.out) to[short,-*] (A.out) to[short,-o] ++(1,0) node[right]{\(v_\text{out}\)};
+    \draw (A.+) to[short] ++(0,-.5) to[short,-o] ++(-.5,0) node[left]{\(v_\text{in}\)};
+  \end{circuitikz}
+  \caption{Configuración de seguidor de tensión.}
+  \label{fig_seguidor}
+\end{figure}
+
+Este tipo de circuito es muy utilizado como etapa separadora entre circuitos con relativa alta impedancia de salida y de entrada.
+

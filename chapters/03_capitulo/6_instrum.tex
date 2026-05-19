@@ -1,0 +1,134 @@
+
+\section{Amplificador de instrumentación}
+
+El esquema correspondiente al circuito se muestra en la figura \ref{fig_amp_instrumentación}.
+\begin{figure}[!ht]
+  \centering
+  \begin{circuitikz}[transform shape]
+    \node[op amp] (A) at(1.4,0) {};
+    \node[op amp,yscale=-1] (B) at(-4,2.5){};
+    \node[op amp] (C) at(-4,-2.5){};
+    \draw (C.-) to[short] ++(-.5,0) to[short] ++(0,1) coordinate(c-);
+    \draw (B.-) to[short] ++(-.5,0) to[short] ++(0,-1) coordinate(b-) to[R,l={\(R_G\)}] (c-);
+    \draw (b-) to[R,l={\(R_1\)}] (b- -| B.out) to[short,-*] (B.out) node[above]{\(v_B^-\)} to[R,l={\(R_2\)}] ++(3,0) coordinate(r2b) to[R,l={\(R_3\)}] (r2b -| A.out) to[short] (A.out) to[short,*-o] ++(1,0) node[right]{\(v_\text{out}\)};
+    \draw (c-) to[R,l={\(R_1\)}] (c- -| C.out) to[short,-*] (C.out) node[below]{\(v_B^+\)} to[R,l={\(R_2\)}] ++(3,0) coordinate(r2c) to[R,l={\(R_3\)}] ++(3,0) node[ground,rotate=90]{};
+    \draw (A.+) to[short] (A.+ -| r2c) to[short,-*] (r2c);
+    \draw (A.-) to[short] (A.- -| r2b) to[short,-*] (r2b);
+    \draw (B.+) to[short,-o] ++(-.5,0) node[left]{\(v_i^-\)};
+    \draw (C.+) to[short,-o] ++(-.5,0) node[left]{\(v_i^+\)};
+  \end{circuitikz}
+  \caption{Topología del amplificador de instrumentación.}
+  \label{fig_amp_instrumentación}
+\end{figure}
+
+Un amplificador de instrumentación es un tipo especial de amplificador diferencial diseñado para medir señales eléctricas muy pequeñas con gran precisión, incluso cuando están mezcladas con mucho ruido o con tensiones comunes elevadas.
+
+Su objetivo es amplificar únicamente la diferencia entre dos señales de entrada:
+\[
+V_d = V_2 - V_1
+\]
+y rechazar lo que ambas tengan en común (ruido, interferencias, offsets, etc.). Esto se conoce como rechazo en modo común.
+
+\subsection{Análisis y derivación}
+
+Comenzamos calculando los voltajes a la salidas de los buffers (\(v_B^-\) y \(v_B^+\)) mediante superposición. Para calcular \(v_B^-\) apaciguamos la entrada \(v_i^+\), es decir consideramos \(v_i^+=0\). De esto resulta el circuito equivalente de la figura \ref{fig_instrumentacion_rama_de_arriba}.
+\begin{figure}[!ht]
+  \centering
+  \begin{circuitikz}
+    \node[op amp,yscale=-1] (B){};
+    \draw (B.-) to[short] ++(0,-1) coordinate(tmp) to[R,l={\(R_1\)}] (tmp -| B.out) to[short,-*] (B.out) to[short,-o] ++(.5,0) node[right]{\(v_B^-\)};
+    \draw (B.+) to[short,-o] ++(-.2,0) node[left]{\(v_i^-\)};
+    \draw (tmp) to[R,l={\(R_G\)}] ++(-2,0) node[ground]{};
+  \end{circuitikz}
+  \caption{Circuito equivalente con \(v_i^+=0\).}
+  \label{fig_instrumentacion_rama_de_arriba}
+\end{figure}
+
+Se forma un divisor de tensión resistivo desde \(v_B^-\) hasta la masa. La tensión en el terminal no inversor, debido al cortocircuito virtual, será igual a \(v_i^-\). Entonces se cumple:
+El circuito de la figura \ref{fig_instrumentacion_rama_de_arriba} no es más que un amplificador no inversor, por lo tanto, \(v_B^-\) es
+\begin{equation*}
+  v_B^- = v_i^- \left(1+\frac{R_1}{R_G}\right)
+\end{equation*}
+
+Operando de la misma manera, apaciguamos \(v_i^-\) para obtener \(v_B^+\), donde el circuito resultante es el presentado en la figura \ref{fig_instrumentacion_rama_de_abajo}.
+\begin{figure}[!ht]
+  \centering
+  \begin{circuitikz}
+    \node[op amp] (C){};
+    \draw (C.+) to[short,-o] ++(-.2,0) node[left]{\(v_i^+\)};
+    \draw (C.-) to[short] ++(0,1) coordinate(tmp) to[R,l={\(R_1\)}] (tmp -| C.out) to[short,i<_={\(i\)},-*] (C.out) to[short,-o] ++(.5,0) node[right]{\(v_B^+\)};
+    \draw (tmp) to[R,l={\(R_G\)},i={\(i\)}] ++(0,2) to[R,l={\(R_1\)},i={\(i\)}] ++(2,0)node[ground,rotate=90]{};
+  \end{circuitikz}
+  \caption{Circuito equivalente con \(v_i^-=0\).}
+  \label{fig_instrumentacion_rama_de_abajo}
+\end{figure}
+
+Como la corriente que circula a través del circuito es \(i\), entonces se cumple la siguiente igualdad:
+\begin{align*}
+  \frac{v_i^+-0}{R_G} &= \frac{0-v_B^-}{R_1}\\ 
+  v_i^+ \frac{R_1}{R_G} &= -v_B^- \\ 
+  v_i^+ &= -v_B^- \frac{R_G}{R_1}
+\end{align*}
+Así, la tensión \(v_B^-\) es igual a 
+\begin{align*}
+  v_B^- &= v_i^- \left( 1+ \frac{R_1}{R_G}\right) - v_i^+\frac{R_1}{R_G}\\ 
+  v_B^- &= v_i^- + \frac{R_1}{R_G}(v_i^- - v_i^+)
+\end{align*}
+Mediante un desarrollo análogo, se llega a la siguiente expresión para \(v_B^+\):
+\[
+  v_B^+ = v_i^+ + \frac{R_1}{R_G} (v_i^+-v_i^-)
+\]
+Conociendo estos valores, podemos calcular la salida mediante la fórmula del amplificador diferencial:
+\begin{align*}
+  v_\text{out} &= \frac{R_3}{R_2}(v_B^+-v_B^-) \\ 
+  v_\text{out} &= \frac{R_3}{R_2}\left(
+    v_i^+ + \frac{R_1}{R_G} (v_i^+-v_i^-) - v_i^- - \frac{R_1}{R_G}(v_i^- - v_i^+)
+  \right) \\ 
+  v_\text{out} &= \frac{R_3}{R_2} \left( (v_i^+-v_i^-)+\frac{2R_1}{R_G}(v_i^+-v_i^-) \right) \\ 
+  v_\text{out} &= \frac{R_3}{R_2}(v_i^+-v_i^-) \left(1+\frac{2R_1}{R_G}\right)
+\end{align*}
+
+\subsection{Inamp con dos amplificadores}
+
+Se llama inamp a un amplificador de instrumentación. Esta variante consiste en dos amplificadores no inversores conectados en serie. Funciona como un amplificador diferencial. El circuito está representado en la figura \ref{fig_inamp_2}.
+\begin{figure}[!ht]
+  \centering
+  \begin{circuitikz}
+    % amp 1
+    \node[op amp](OA) at (-2.5,0){};
+    \draw (OA.-) to[short,-*] ++(0,1) coordinate(tmp) to[R,l_={\(R_1\)}] ++(-2,0) node[ground,rotate=-90]{};
+    \draw (tmp) to[R,l={\(R_2\)}] (tmp -| OA.out) node[above right]{\(v_x\)} coordinate(aout) to[short,*-] (OA.out);
+    \draw (OA.+) to[short] ++(0,-.5) to[short,-o] ++(-1,0) node[left]{\(v_\text{a}\)};
+    % amp 2
+    \node[op amp](OB) at (2.5,0){};
+    \draw (OB.-) to[short,-*] ++(0,1) node[above]{\(v_y\)} coordinate(tmp) to[R,l_={\(R_3\)},i<_={\(i_3\)}] (aout);
+    \draw (tmp) to[R,l={\(R_4\)},i={\(i_4\)}] (tmp -| OB.out) to[short,-*] (OB.out) to[short,-o] ++(.5,0) node[right]{\(v_\text{out}\)};
+    \draw (OB.+) to[short] ++(0,-.5) to[short,-o] ++(-1,0) node[left]{\(v_\text{b}\)};
+  \end{circuitikz}
+  \caption{Topología de Inamp con dos operacionales.}
+  \label{fig_inamp_2}
+\end{figure}
+
+Para el amplificador de la izquierda se tiene 
+\[
+  v_x = v_\text{a} \left(1+\frac{R_2}{R_1}\right)
+\]
+Luego, para el amplificador de la derecha, se tiene
+\begin{align*}
+  i_3&=i_4 \\ 
+  \frac{v_x-v_y}{R_3}&=\frac{v_y-v_\text{out}}{R_4}
+\end{align*}
+Por ser \(v_y=v_\text{b}\), resulta
+\begin{align*}
+  \frac{v_x-v_\text{b}}{R_3}&=\frac{v_\text{b}-v_\text{out}}{R_4} \\
+  \frac{v_x}{R_3} - \frac{v_\text{b}}{R_3} &= \frac{v_\text{b}}{R_4} - \frac{v_\text{out}}{R_4}\\ 
+  \frac{v_\text{out}}{R_4} &= -\frac{v_x}{R_3} + \frac{v_\text{b}}{R_3} +\frac{v_\text{b}}{R_4} \\ 
+  v_\text{out} &= R_4\left(v_\text{b}\left(\frac{1}{R_3}+\frac{1}{R_4}\right) - \frac{v_\text{a}}{R_3} \left(1+\frac{R_2}{R_1}\right)\right) \\
+  v_\text{out} &= v_\text{b}\left(\frac{R_4}{R_3}+1\right) - \frac{v_\text{a}R_4}{R_3} \left(1+\frac{R_2}{R_1}\right)
+\end{align*}
+Y si se considera \(R_3=R_2\) y \(R_4=R_1\), se simplifica a 
+\begin{align*}
+  v_\text{out} &= v_\text{b}\left(\frac{R_1}{R_2}+1\right) - \frac{v_\text{a}R_1}{R_2} \left(1+\frac{R_2}{R_1}\right) \\
+  v_\text{out} &= v_\text{b}\left(1+\frac{R_1}{R_2}\right) - v_\text{a}\left(1+\frac{R_1}{R_2}\right)\\
+  v_\text{out} &= (v_\text{b} - v_\text{a})\left(1+\frac{R_1}{R_2}\right)
+\end{align*}

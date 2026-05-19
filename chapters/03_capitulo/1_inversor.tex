@@ -1,0 +1,150 @@
+
+\section{Amplificador inversor}
+
+La señal de salida \(v_\text{out}\) está invertida, en fase, con respecto a la entrada \(v_\text{in}\). El esquema del circuito es:
+\begin{figure}[!ht]
+  \centering
+  \begin{subfigure}[b]{\textwidth}
+    \centering
+    \begin{circuitikz}
+      \node[op amp](OA) at (0,0){};
+      \draw (OA.-) node[left]{\(+\)} to[short,-*] ++(0,1) coordinate(tmp) to[R,l_={\(R_1\)},-o] ++(-3,0) node[left]{\(v_\text{in}\)};
+      \draw (tmp) to[R,l={\(R_2\)}] (tmp -| OA.out) to[short,-*] (OA.out) to[short,-o] ++(1,0) node[right]{\(v_\text{out}\)};
+      \node[ground] at (OA.+){};
+      \node[left] at (OA.+){\(-\)};
+      \node[left] at(-1,0){\(v_i\)};
+    \end{circuitikz}
+  \caption{Circuito con amplificador operacional (configuración inversora).}
+  \end{subfigure}
+  \vspace{0.5cm}
+  \begin{subfigure}[b]{\textwidth}
+    \centering
+    \begin{circuitikz}[]
+      \coordinate (OA-) at (-1,.5);
+      \coordinate (OA+) at (-1,-1);
+      \coordinate (OAout) at (3,0);
+      \draw (OA-) to[R,l_={\(R_i\)}] (OA+);
+      \draw (OA-) node[left]{\(+\)} to[short,-*] ++(0,1) coordinate(tmp) to[R,l_={\(R_1\)},i<_={\(i_1\)},-o] ++(-3,0) node[left]{\(v_\text{in}\)};
+      \draw (tmp) to[R,l={\(R_2\)},i={\(i_2\)}] (tmp -| OAout) to[short,-*] (OAout) to[short,-o] ++(1,0) node[right]{\(v_\text{out}\)};
+      \draw (OA+) node[left]{\(-\)} to[short] ++(0,-1)node[ground]{} coordinate(tmp);
+      \draw (OAout) to[R,l={\(R_o\)}] ++(-3,0) coordinate(tmp2) to[sV,l={\(A_\text{VOL}\)}] (tmp -| tmp2) node[ground]{};
+    \end{circuitikz}
+  \caption{Circuito equivalente de amplificador operacional ideal.}
+  \end{subfigure}
+  \caption{}
+\end{figure}
+
+Para en AO ideal la ganancia se considera infinita \(A_v\to\infty\) y la impedancia de entrada se consideran infinita \(R_i\to\infty\). Entonces \(R_i>R_1\) y \(R_i>R_2\).
+
+Entonces, como no fluye corriente hacia adentro del amplificador, se tiene que las corrientes \(i_1\) e \(i_2\) serán iguales
+\(
+  i_1=i_2
+\).
+
+Además se tienen las equivalencias:
+\begin{equation}\label{eq_inversor_corrientes}
+  i_1=\frac{v_\text{in}-v_i}{R_1}\quad \text{y} \quad i_2=\frac{v_i-v_\text{out}}{R_2}
+\end{equation}
+Pero como \(A\to\infty\) y 
+\begin{equation}\label{eq_inversor_vi}
+  v_i=-\frac{v_\text{out}}{A_v} \quad \text{en consecuencia } v_i\to0
+\end{equation}
+debido a esto se dice que en la entrada existe un cortocircuito virtual, y si la entrada no inversora está a masa, entonces se dice que existe una \emph{masa virtual}.
+
+Para analizar el circuito se busca comparar la entrada y la salida. Es decir, se busca la relación de ganancia o amplificación. Reemplazando el resultado de la expresión \eqref{eq_inversor_vi} en las corrientes \(i_1\) e \(i_2\) de la expresión \eqref{eq_inversor_corrientes}:
+\[
+  i_1=\frac{v_\text{in}}{R_1} \quad \text{y}\quad i_2 =-\frac{v_\text{out}}{R_2}
+\]
+En consecuencia resulta:
+\[
+  \frac{v_\text{in}}{R_1}=-\frac{v_\text{out}}{R_2} \quad \Rightarrow\quad \frac{v_\text{out}}{v_\text{in}}=-\frac{R_2}{R_1}
+\]
+Y la amplificación de tensión \(A\) será 
+\[
+  A=\frac{v_\text{out}}{v_\text{in}}\quad \text{es decir}\quad \boxed{A=-\frac{R_2}{R_1}}
+\]
+
+\subsection{Circuito Pan-pot}
+
+Su función es distribuir una señal de entrada entre dos canales. El diagrama del circuito es como se muestra en la figura \ref{fig_panpot}.
+\begin{figure}[!ht]
+  \centering
+  \begin{circuitikz}
+    \node[op amp] (A) {};
+    \node[op amp,below=1.5cm] (B) at(A.south) {};
+    % A amp circuit
+    \draw (A.-) to[short] ++(0,1) coordinate(vai) to[R,l={\(R_2\)}] ++(-3,0) coordinate(x) to[R,l={\(R_1\)}] ++(-3,0) to[short] ++(0,-2.5) coordinate(vin) to[short,-o] ++(-1,0)node[left]{\(v_\text{in}\)};
+    \draw (vai) to[R,l={\(R_3\)},*-] (vai -| A.out) to[short,-*] (A.out) to[short,-o] ++(1,0)node[right]{\(v_\text{outL}\)};
+    \node[ground,rotate=-90] at (A.+){};
+    % B amp circuit
+    \draw (B.-) to[short] ++(0,1) coordinate(vbi) to[R,l={\(R_2\)}] ++(-3,0) coordinate(y) to[R,l={\(R_1\)}] ++(-3,0) to[short,-*] (vin);
+    \draw (vbi) to[R,l={\(R_3\)},*-] (vbi -| B.out) to[short,-*] (B.out) to[short,-o] ++(1,0)node[right]{\(v_\text{outR}\)};
+    \node[ground,rotate=-90] at (B.+){};
+    % Potentiometer
+    \draw (x) to[pR,name=Rp,l_={\(R_p\)},*-*] (y);
+    \node[ground,rotate=90] at(Rp.wiper){};
+  \end{circuitikz}
+  \caption{Diagrama topológico del circuito Pan-pot.}
+  \label{fig_panpot}
+\end{figure}
+
+Las fórmulas de las salidas \(v_\text{outL}\) y \(v_\text{outR}\) son
+\begin{align*}
+  v_\text{outL} &= v_\text{in}\frac{-R_3R_L}{R_1R_L+R_2R_L+R_1R_2}\\
+  v_\text{outR} &= v_\text{in}\frac{-R_3R_R}{R_1R_R+R_2R_R+R_1R_2}
+\end{align*}
+donde
+\[
+  R_p=R_L+R_R
+\]
+
+Para obtener estas fórmulas separamos el circuito en dos mitades iguales, la superior y la inferior. Así, una de las mitades resultaría como el circuito de la figura \ref{fig_panpot_mitad}.
+
+\begin{figure}[!ht]
+  \centering
+  \begin{circuitikz}
+    \node[op amp] (A) {};
+    % A amp circuit
+    \draw (A.-) to[short] ++(0,1) coordinate(vai) to[R,l={\(R_2\)}] ++(-3,0) coordinate(x) to[R,l={\(R_1\)},-o] ++(-3,0) coordinate(vin) node[left]{\(v_\text{in}\)};
+    \draw (vai) to[R,l={\(R_3\)},*-] (vai -| A.out) to[short,-*] (A.out) to[short,-o] ++(1,0)node[right]{\(v_\text{outL}\)};
+    \node[ground,rotate=-90] at (A.+){};
+    % Potentiometer (half)
+    \draw (x) to[R,name=Rp,l_={\(R_L\)},*-] ++(0,-2.3) node[ground]{};
+  \end{circuitikz}
+  \caption{Diagrama topológico del circuito Pan-pot.}
+  \label{fig_panpot_mitad}
+\end{figure}
+
+Aplicamos Thevenin en la sección con la fuente y las resistencias \(R_1\) y \(R_L\) como se muestra en la figura \ref{fig_thev_panpot}.
+\begin{figure}[!ht]
+  \centering
+  \begin{circuitikz}
+    \draw (0,-1) to[sV,l={\(v_\text{in}\)}] (0,1) to[R,l={\(R_1\)}] (2.5,1) to[R,l={\(R_L\)}] (2.5,-1) to[short] (0,-1);
+    \node[ground] at(2.5,-1){};
+    \draw (2.5,1) to[short,*-o] ++(.5,0);
+    \draw (2.5,-1) to[short,*-o] ++(.5,0);
+  \end{circuitikz}
+  \caption{}
+  \label{fig_thev_panpot}
+\end{figure}
+
+Entonces, al se obtiene \(R_\text{th}\) y \(v_\text{th}\) a partir del circuito de la figura \ref{fig_thev_panpot}, resultando:
+\begin{gather*}
+  v_\text{th} = v_\text{in}\frac{R_L}{R_L+R_1} \\ 
+  R_\text{th} = \frac{R_LR_1}{R_L+R_1}
+\end{gather*}
+
+Entonces, reemplazamos \(R_\text{th}\) por \(R_1\) y \(R_L\) en el circuito de la figura \ref{fig_panpot_mitad} y usamos \(v_\text{th}\) en vez de \(v_\text{in}\). Así, vemos que el circuito equivalente es un amplificador inversor de modo que \(v_L\) puede calcularse como:
+\[
+  v_L=v_\text{th}\frac{-R_3}{R_2+R_\text{th}}
+\]
+Reemplazando las expresiones equivalentes de \(v_\text{th}\) y \(R_\text{th}\), resulta
+\[
+  v_L = v_\text{in} \frac{R_L}{R_L+R_1}\frac{-R_3}{R_2+\frac{R_LR_1}{R_L+R_1}}
+\]
+donde operando algebráicamente se llega a
+\[
+  v_\text{L} = v_\text{in}\frac{-R_3R_L}{R_1R_L+R_2R_L+R_1R_2}
+\]
+
+Un desarrollo idéntico nos conduce al mismo resultado para la salida R.

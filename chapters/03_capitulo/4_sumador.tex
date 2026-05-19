@@ -1,0 +1,34 @@
+
+\section{Amplificador sumador}
+
+\subsection{Configuración inversora}
+
+Suma un conjunto de señales de entrada \(v_1,v_2,\dots,v_n\) e invierte el resultado. El circuito se muestra en la figura \ref{fig_sumador_inversor}.
+\begin{figure}[!ht]
+  \centering
+  \begin{circuitikz}
+    \node[op amp](OA) at (0,0){};
+    \draw (OA.-) to[short] ++(-1,0) to[short] ++(0,1) coordinate(tmp) to[R,l_={\(R_2\)},i<_={\(i_2\)},-o] ++(-3,0) node[left]{\(v_2\)};
+    \draw (OA.-) to[short,*-] ++(-1,0) to[R,l_={\(R_1\)},i<_={\(i_1\)},*-o] ++(-3,0) node[left]{\(v_1\)};
+    \draw[dotted,thick] (tmp) -- ++(0,1.5) coordinate(nnode);
+    \draw (nnode) to[R,l_={\(R_n\)},i<_={\(i_n\)},-o] ++(-3,0) node[left]{\(v_n\)};
+    \draw (A.-) to[short,*-] ++(0,1) to[R,l={\(R_f\)},i={\(i_f\)}] (tmp -| OA.out) to[short,-*] (OA.out) to[short,-o] ++(1,0) node[right]{\(v_\text{out}\)};
+    \node[ground] at (OA.+){};
+  \end{circuitikz}
+  \caption{Configuración sumadora.}
+  \label{fig_sumador_inversor}
+\end{figure}
+
+Como en un amplificador ideal no ingresa corriente por sus terminales, entonces 
+\[
+  i_f = i_1+i_2+\cdots +i_n
+\]
+Entonces, reemplazando cada corriente con la ley de Ohm:
+\begin{align*}
+  \frac{v^- - v_\text{out}}{R_f} &= \frac{v_1 - v^-}{R_1} + \frac{v_2 - v^-}{R_2} + \cdots + \frac{v_n - v^-}{R_n}\\ 
+  \frac{v_\text{out}}{R_f} &= \frac{v^-}{R_f} - \frac{v_1 - v^-}{R_1} - \frac{v_2 - v^-}{R_2} - \cdots - \frac{v_n - v^-}{R_n}
+\end{align*}
+Y, recordando que \(v^-=0\) ya que se tiene la misma tensión que en la terminal no inversora, se puede despajar \(v_\text{out}\), resultando:
+\[
+  v_\text{out} =-R_f \left(\frac{v_1}{R_1} + \frac{v_2}{R_2} - \cdots - \frac{v_n}{R_n}\right) 
+\]
